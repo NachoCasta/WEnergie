@@ -1,0 +1,11 @@
+.boton-agregar-repuesto{
+	position: absolute;
+	bottom: 15px;
+	right: 15px;
+	width: calc(100% - 15px);
+}
+
+.centrado{
+  width: 50%;
+  margin: 0 auto;
+}

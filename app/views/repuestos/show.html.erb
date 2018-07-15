@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Articulo:</strong>
+  <%= @repuesto.articulo %>
+</p>
+
+<p>
+  <strong>Precio:</strong>
+  <%= @repuesto.precio %>
+</p>
+
+<p>
+  <strong>Id interna:</strong>
+  <%= @repuesto.id_interna %>
+</p>
+
+<p>
+  <strong>Descripcion:</strong>
+  <%= @repuesto.descripcion %>
+</p>
+
+<%= link_to 'Edit', edit_repuesto_path(@repuesto) %> |
+<%= link_to 'Back', repuestos_path %>

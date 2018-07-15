@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  articulo: MyString
+  precio: 1.5
+  id_interna: 1
+  descripcion: MyString
+
+two:
+  articulo: MyString
+  precio: 1.5
+  id_interna: 1
+  descripcion: MyString

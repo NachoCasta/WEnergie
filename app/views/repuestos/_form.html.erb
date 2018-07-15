@@ -1,0 +1,37 @@
+<%= form_with(model: repuesto, local: true) do |form| %>
+  <% if repuesto.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(repuesto.errors.count, "error") %> prohibited this repuesto from being saved:</h2>
+
+      <ul>
+      <% repuesto.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :articulo %>
+    <%= form.text_field :articulo %>
+  </div>
+
+  <div class="field">
+    <%= form.label :precio %>
+    <%= form.text_field :precio %>
+  </div>
+
+  <div class="field">
+    <%= form.label :id_interna %>
+    <%= form.number_field :id_interna %>
+  </div>
+
+  <div class="field">
+    <%= form.label :descripcion %>
+    <%= form.text_field :descripcion %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
