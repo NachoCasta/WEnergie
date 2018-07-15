@@ -1,6 +1,5 @@
 class ApisController < ApplicationController
   def index
-  	puts "hola"
   end
 
   def form_cotizacion

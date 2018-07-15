@@ -1,4 +1,3 @@
-
 .clearfix:after {
   content: "";
   display: table;
@@ -24,7 +23,6 @@ body.template_cotizacion {
   background: #FFFFFF; 
   font-family: Arial, sans-serif; 
   font-size: 14px; 
-  font-family: SourceSansPro;
 }
 
 header.clearfix {
@@ -81,7 +79,7 @@ h2.contacto {
 
 #invoice h1 {
   color: #3b5430;
-  font-size: 2.4em;
+  font-size: 2em;
   line-height: 1em;
   font-weight: normal;
   margin: 0  0 10px 0;
@@ -101,7 +99,7 @@ table.template_cotizacion {
 
 table.template_cotizacion th,
 table.template_cotizacion td {
-  padding: 20px;
+  padding: 20px 15px 20px 15px;
   background: #EEEEEE;
   text-align: center;
   border-bottom: 1px solid #FFFFFF;
@@ -125,34 +123,38 @@ table.template_cotizacion td h3{
 
 table.template_cotizacion .no {
   color: #FFFFFF;
-  font-size: 0.8em;
+  font-size: 0.6em;
   background: #3b5430;
-  width: 95px;
+  width: 60px;
 }
 
 table.template_cotizacion .desc {
+  font-size: 0.6em;
   text-align: left;
 }
 
 table.template_cotizacion .unit {
-  font-size: 0.8em;
+  font-size: 0.6em;
+  width: 50px;
 }
 
 table.template_cotizacion .qty {
   background: #DDDDDD;
-  font-size: 0.8em;
+  width: 50px;
+  font-size: 0.6em;
 }
 
 table.template_cotizacion .total {
   background: #3b5430;
   color: #FFFFFF;
-  font-size: 0.8em;
+  width: 50px;
+  font-size: 0.6em;
 }
 
 table.template_cotizacion td.unit,
 table.template_cotizacion td.qty,
 table.template_cotizacion td.total {
-  font-size: 1.2em;
+  font-size: 0.8em;
 }
 
 table.template_cotizacion tbody tr:last-child td {
@@ -163,7 +165,7 @@ table.template_cotizacion tfoot td {
   padding: 10px 20px;
   background: #FFFFFF;
   border-bottom: none;
-  font-size: 1.2em;
+  font-size: 0.7em;
   white-space: nowrap; 
   border-top: 1px solid #AAAAAA; 
 }
@@ -174,7 +176,7 @@ table.template_cotizacion tfoot tr:first-child td {
 
 table.template_cotizacion tfoot tr:last-child td {
   color: #3b5430;
-  font-size: 1.4em;
+  font-size: 0.8em;
   border-top: 1px solid #3b5430; 
 
 }
