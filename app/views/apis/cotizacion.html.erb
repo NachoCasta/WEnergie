@@ -19,7 +19,7 @@
         <div class="to">Cotización para:</div>
         <h2 class="name"><%= params["cliente"] %></h2>
         <div class="rut"><%= params["rut"] %></div>
-        <% if params["cliente"] != params["contacto"] %>
+        <% if params["cliente"] != params["contacto"] and params["contacto"] != ""  %>
         <div class="to">Atiende Sr(a):</div>
         <h2 class="contacto"><%= params["contacto"] %></h2>
         <% end %>
