@@ -1,0 +1,69 @@
+<div class="container-fluid override">
+  <div class="row">
+    <div class="col-md-7">
+      <div class="row borde shadow-lg p-3 mb-5 bg-white rounded">
+        <div class="col-md-12">
+    	  <%= bootstrap_form_tag url: "/apis/cotizacion_repuestos" do |f| %>
+          <div class="row">
+            <div class="col-md-12" style="text-align: center">
+              <h1> Nueva cotización </h1>
+            </div>
+          </div>
+          <%= render :partial => 'apis/datos_cliente', :locals => {:f => f} %>
+          <div class="row">
+            <div class="col-md-7">
+              <%= f.select :repuesto, options_for_select(Repuesto.get_repuestos), {}, class: "repuestos", style: "width: 100%;" %>
+            </div>
+            <div class="col-md-2">
+              <%= f.number_field :cantidad, value: "1", min: "1" %>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label> <br> </label>
+                <%= f.submit "Agregar", onclick: "javascript:addItem('repuestos')", type: "button", class: 'btn btn-primary', style: "width: 100%"%>
+              </div>
+            </div>
+            <%= f.hidden_field :lista, value: "[]"%>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive">          
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Articulo</th>
+                      <th>Descripción</th>
+                      <th>Cantidad</th>
+                      <th>Precio</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="dynamic-list">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <%= f.select :peso_total, options_for_select([["20 kg", 20], ["40 kg", 40], ["60 kg", 60]]) %>
+            </div>
+            <div class="col-md-3">
+              <%= f.number_field :numero_cotizacion, min: 1, label: "N° Cotización" %>
+            </div>
+            <div class="col-md-2">
+              <%= f.text_field :euro, value: "790" %>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label> <br> </label>
+                <%= f.submit "Crear cotizacion", class: 'btn btn-primary', style: "width: 100%" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

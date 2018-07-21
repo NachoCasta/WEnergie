@@ -4,9 +4,9 @@ $(document).ready(function() {
     });
 });
 
-function addItem(){
-    var id = document.getElementById("repuesto").value;
-    $.get("/repuestos/"+id.toString()+".json", function(data) {
+function addItem(tipo){
+    var id = document.getElementById(tipo.slice(0,-1)).value;
+    $.get("/"+tipo+"/"+id.toString()+".json", function(data) {
         console.log(data);
         var tbody = document.getElementById("dynamic-list");
         var tr = document.createElement("tr");
@@ -15,7 +15,12 @@ function addItem(){
         td1.appendChild(document.createTextNode(data.articulo));
         tr.appendChild(td1);
         var td2 = document.createElement("td");
-        td2.appendChild(document.createTextNode(data.descripcion));
+        if (tipo == "repuestos") {
+            td2.appendChild(document.createTextNode(data.descripcion));
+        }
+        else {
+            td2.appendChild(document.createTextNode(data.nombre));            
+        }
         tr.appendChild(td2);
         var td3 = document.createElement("td");
         var cantidad = document.getElementById("cantidad").value;
@@ -34,7 +39,7 @@ function addItem(){
         td4.appendChild(eliminar);
         tr.appendChild(td4);
         tbody.appendChild(tr);
-        var hidden = document.getElementById("repuestos");
+        var hidden = document.getElementById("lista");
         var repuestos = JSON.parse(hidden.value);
         var i;
         for (i = 0; i < cantidad; i++) { 
@@ -48,11 +53,11 @@ function removeItem(id){
     var tbody = document.getElementById("dynamic-list");
     var item = document.getElementById(id);
     tbody.removeChild(item);
-    var hidden = document.getElementById("repuestos");
-    var repuestos = JSON.parse(hidden.value);
+    var hidden = document.getElementById("lista");
+    var lista = JSON.parse(hidden.value);
     var i;
     for (i = 0; i < item.cells[2].innerHTML; i++) { 
-        repuestos.splice(repuestos.indexOf(id), 1);
+        lista.splice(lista.indexOf(id), 1);
     }
-    hidden.setAttribute("value", "["+repuestos.toString()+"]");
+    hidden.setAttribute("value", "["+lista.toString()+"]");
 }

@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-md-8">
+    <%= f.text_field :cliente %>
+  </div>
+  <div class="col-md-4">
+    <%= f.text_field :rut %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <%= f.text_field :direccion %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-7">
+    <%= f.text_field :contacto %>
+  </div>
+  <div class="col-md-5">
+    <%= f.text_field :mail %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <%= f.text_field :direccion_despacho, label: "Dirección de despacho" %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-3">
+    <%= f.date_field :fecha_emision, value: Date.today, label: "Fecha de emisión" %>
+  </div>
+  <div class="col-md-3">
+    <%= f.text_field :plazo_entrega, value: "2 semanas", label: "Plazo de entrega" %>
+  </div>
+  <div class="col-md-3">
+    <%= f.text_field :forma_pago, value: "Con la orden", label: "Forma de pago" %>
+  </div>
+  <div class="col-md-3">
+    <%= f.text_field :duracion_trabajo %>
+  </div>
+</div>
+      

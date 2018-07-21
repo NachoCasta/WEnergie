@@ -52,30 +52,30 @@
       <% total = 0 %>
       <% euro = params["euro"].gsub(",", ".").to_f %>
       <tbody>
-        <% repuestos = Hash.new(0) %>
-        <% JSON[params["repuestos"]].each { |id| repuestos[id] += 1 } %>
-        <% repuestos.each_with_index do |r, i| %>
+        <% productos = Hash.new(0) %>
+        <% JSON[params["lista"]].each { |id| productos[id] += 1 } %>
+        <% productos.each_with_index do |r, i| %>
           <% id, cantidad = r %>
-          <% repuesto = Repuesto.find(id) %>
+          <% producto = Producto.find(id) %>
           <tr>
-            <td class="no"><%= repuesto.articulo %></td>
-            <td class="desc"><%= repuesto.descripcion %></td>
-            <td class="qty"><%= repuestos[id] %></td>
-            <td class="unit"><%= number_to_currency(repuesto.precio, unit: "€", delimiter: ".", separator: ",") %></td>
-            <td class="total"><%= number_to_currency(repuesto.precio*cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
-            <td class="total"><%= number_to_currency(repuesto.precio*cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
-            <% total += repuesto.precio*cantidad %>
+            <td class="no"><%= producto.articulo %></td>
+            <td class="desc"><h3><%= producto.nombre %></h3><%= simple_format(producto.descripcion) %></td>
+            <td class="qty"><%= productos[id] %></td>
+            <td class="unit"><%= number_to_currency(producto.precio, unit: "€", delimiter: ".", separator: ",") %></td>
+            <td class="total"><%= number_to_currency(producto.precio*cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
+            <td class="total"><%= number_to_currency(producto.precio*cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+            <% total += producto.precio*cantidad %>
           </tr>
         <% end %>
         <tr>
           <td class="no"></td>
-          <td class="desc"><%= "Transporte FedEx #{params["peso_total"]} kg" %></td>
+          <td class="desc"><h3>Transporte e internación</h3></td>
           <td class="qty"><%= 1 %></td>
-          <% cantidad = params["peso_total"].to_i/20 %>
-          <td class="unit"><%= number_to_currency(cantidad*150, unit: "€", delimiter: ".", separator: ",") %></td>
-          <td class="total"><%= number_to_currency(150*cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
-          <td class="total"><%= number_to_currency(150*cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
-          <% total += 150*cantidad %>
+          <% cantidad = params["costo_transporte"].to_i %>
+          <td class="unit"><%= number_to_currency(cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td class="total"><%= number_to_currency(cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td class="total"><%= number_to_currency(cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+          <% total += cantidad %>
         </tr>
       </tbody>
       <tfoot>

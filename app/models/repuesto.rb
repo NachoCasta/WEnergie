@@ -17,6 +17,6 @@ class Repuesto < ApplicationRecord
 			end
 			repuestos << repuesto
 		end
-		return repuestos
+		return repuestos.sort
 	end
 end

@@ -1,0 +1,112 @@
+<body class="template_cotizacion">
+  <header class="clearfix">
+    <div id="logo">
+      <%= wicked_pdf_image_tag('logo.png')  %>
+    </div>
+    <div id="company">
+      <h2 class="name">W Energie SpA</h2>
+      <div>Rut: 76.610.987-K</div>
+      <div>Punta de Águilas Norte 9300, Casa 12</div>
+      <div>Lo Barnechea, Santiago</div>
+      <div>+56 9 8232 8252</div>
+      <div><a class="correo" href="mailto:swornermuxica@gmail.com">swornermuxica@gmail.com</a></div>
+    </div>
+    </div>
+  </header>
+  <main class="template_cotizacion">
+    <div id="details" class="clearfix">
+      <div id="client">
+        <div class="to">Cotización para:</div>
+        <h2 class="name"><%= params["cliente"] %></h2>
+        <div class="rut"><%= params["rut"] %></div>
+        <% if params["cliente"] != params["contacto"] and params["contacto"] != ""  %>
+        <div class="to">Atiende Sr(a):</div>
+        <h2 class="contacto"><%= params["contacto"] %></h2>
+        <% end %>
+        <% if params["direccion_despacho"] %>
+        <div class="to">Dirección de despacho:</div>
+        <div class="address"><%= params["direccion"] %></div>
+        <% end %>
+        <% if params["mail"] %>
+        <div class="email"><a class="correo" href=<%= params["mail"] %>><%= params["mail"] %></a></div>
+        <% end %>
+      </div>
+      <div id="invoice">
+        <h1>COTIZACIÓN N° <%= params["numero_cotizacion"].to_s.rjust(4, '0') %></h1>
+        <div class="date">Fecha de emisión: <%= Time.parse(params["fecha_emision"]).strftime("%d/%m/%Y") %></div>
+        <div class="date">Fecha de entrega: <%= params["plazo_entrega"] %>
+        </div>
+        <div class="date">Forma de pago: <%= params["forma_pago"] %></div>
+      </div>
+    </div>
+    <table class="template_cotizacion" border="0" cellspacing="0" cellpadding="0">
+      <thead>
+        <tr>
+          <th class="no">ARTÍCULO</th>
+          <th class="desc">DESCRIPCIÓN</th>
+          <th class="qty">CANTIDAD</th>
+          <th class="unit">PRECIO</th>
+          <th class="total" colspan="2">TOTAL</th>
+        </tr>
+      </thead>
+      <% total = 0 %>
+      <% euro = params["euro"].gsub(",", ".").to_f %>
+      <tbody>
+        <% repuestos = Hash.new(0) %>
+        <% JSON[params["lista"]].each { |id| repuestos[id] += 1 } %>
+        <% repuestos.each_with_index do |r, i| %>
+          <% id, cantidad = r %>
+          <% repuesto = Repuesto.find(id) %>
+          <tr>
+            <td class="no"><%= repuesto.articulo %></td>
+            <td class="desc"><%= repuesto.descripcion %></td>
+            <td class="qty"><%= repuestos[id] %></td>
+            <td class="unit"><%= number_to_currency(repuesto.precio, unit: "€", delimiter: ".", separator: ",") %></td>
+            <td class="total"><%= number_to_currency(repuesto.precio*cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
+            <td class="total"><%= number_to_currency(repuesto.precio*cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+            <% total += repuesto.precio*cantidad %>
+          </tr>
+        <% end %>
+        <tr>
+          <td class="no"></td>
+          <td class="desc"><%= "Transporte FedEx #{params["peso_total"]} kg" %></td>
+          <td class="qty"><%= 1 %></td>
+          <% cantidad = params["peso_total"].to_i/20 %>
+          <td class="unit"><%= number_to_currency(cantidad*150, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td class="total"><%= number_to_currency(150*cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td class="total"><%= number_to_currency(150*cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+          <% total += 150*cantidad %>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2"></td>
+          <td colspan="2">SUBTOTAL</td>
+          <td><%= number_to_currency(total, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td><%= number_to_currency(total*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+        </tr>
+        <tr>
+          <td colspan="2"></td>
+          <td colspan="2">IVA 19%</td>
+          <td><%= number_to_currency(total*0.19, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td><%= number_to_currency(total*0.19*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+        </tr>
+        <tr>
+          <td colspan="2"></td>
+          <td colspan="2">TOTAL</td>
+          <td><%= number_to_currency(total*1.19, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td><%= number_to_currency(total*1.19*euro, precision: 0, delimiter: ".", separator: ",") %></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div id="notices">
+      <div>Datos de transferencia:</div>
+      <div class="address">W Energie SpA</div>
+      <div class="address">Rut: 76.610.987-K</div>
+      <div class="address">Chequera electrónica Banco Estado</div>
+      <div class="address">N° 33470365418</div>
+      <div class="address"><a class="datos" href="mailto:swornermuxica@gmail.com">swornermuxica@gmail.com</a></div>
+    </div>
+  </main>
+</body>
+<%= wicked_pdf_stylesheet_link_tag "template_cotizacion" %>
