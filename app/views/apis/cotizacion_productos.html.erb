@@ -57,14 +57,15 @@
         <% productos.each_with_index do |r, i| %>
           <% id, cantidad = r %>
           <% producto = Producto.find(id) %>
+          <% precio = params["precio#{id}"].to_f %>
           <tr>
             <td class="no"><%= producto.articulo %></td>
             <td class="desc"><h3><%= producto.nombre %></h3><%= simple_format(producto.descripcion) %></td>
             <td class="qty"><%= productos[id] %></td>
-            <td class="unit"><%= number_to_currency(producto.precio, unit: "€", delimiter: ".", separator: ",") %></td>
-            <td class="total"><%= number_to_currency(producto.precio*cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
-            <td class="total"><%= number_to_currency(producto.precio*cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
-            <% total += producto.precio*cantidad %>
+            <td class="unit"><%= number_to_currency(precio, unit: "€", delimiter: ".", separator: ",") %></td>
+            <td class="total"><%= number_to_currency(precio*cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
+            <td class="total"><%= number_to_currency(precio*cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+            <% total += precio*cantidad %>
           </tr>
         <% end %>
         <tr>

@@ -27,7 +27,14 @@ function addItem(tipo){
         td3.appendChild(document.createTextNode(cantidad));
         tr.appendChild(td3);
         var td4 = document.createElement("td");
-        td4.appendChild(document.createTextNode("€ "+data.precio));
+        var iprecio = document.createElement("input");
+        iprecio.setAttribute("class", "form-control");
+        iprecio.setAttribute("name", "precio" + id.toString());
+        iprecio.setAttribute("type", "number");
+        iprecio.setAttribute("step", "0.01");
+        iprecio.setAttribute("min", "0");
+        iprecio.setAttribute("value", data.precio);
+        td4.appendChild(iprecio);
         tr.appendChild(td4);
         var td4 = document.createElement("td");
         var eliminar = document.createElement("a");

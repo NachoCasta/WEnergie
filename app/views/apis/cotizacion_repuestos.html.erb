@@ -57,14 +57,15 @@
         <% repuestos.each_with_index do |r, i| %>
           <% id, cantidad = r %>
           <% repuesto = Repuesto.find(id) %>
+          <% precio = params["precio#{id}"].to_f %>
           <tr>
             <td class="no"><%= repuesto.articulo %></td>
             <td class="desc"><%= repuesto.descripcion %></td>
             <td class="qty"><%= repuestos[id] %></td>
-            <td class="unit"><%= number_to_currency(repuesto.precio, unit: "€", delimiter: ".", separator: ",") %></td>
-            <td class="total"><%= number_to_currency(repuesto.precio*cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
-            <td class="total"><%= number_to_currency(repuesto.precio*cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
-            <% total += repuesto.precio*cantidad %>
+            <td class="unit"><%= number_to_currency(precio, unit: "€", delimiter: ".", separator: ",") %></td>
+            <td class="total"><%= number_to_currency(precio*cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
+            <td class="total"><%= number_to_currency(precio*cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+            <% total += precio*cantidad %>
           </tr>
         <% end %>
         <tr>
