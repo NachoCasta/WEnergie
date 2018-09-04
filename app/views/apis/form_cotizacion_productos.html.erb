@@ -1,12 +1,14 @@
 <div class="container-fluid override">
   <div class="row">
-    <div class="col-md-7">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
       <div class="row borde shadow-lg p-3 mb-5 bg-white rounded">
         <div class="col-md-12">
     	  <%= bootstrap_form_tag url: "/apis/cotizacion_productos" do |f| %>
           <div class="row">
-            <div class="col-md-12" style="text-align: center">
-              <h1> Cotización productos </h1>
+            <div class="col-md-12 display-3" style="text-align: center">
+              Cotización productos 
             </div>
           </div>
           <%= render :partial => 'apis/datos_cliente', :locals => {:f => f} %>
@@ -45,10 +47,18 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-2">
               <%= f.number_field :costo_transporte, min: 1, label: "Costo Transporte", placeholder: "€" %>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
+              <%= f.number_field :costo_montaje, min: 1, label: "Costo Montaje", placeholder: "€" %>
+            </div>
+            <!--
+            <div class="col-md-2">
+              <%= f.number_field :descuento, min: 0, max: 100, placeholder: "%" %>
+            </div>
+            -->
+            <div class="col-md-2">
               <%= f.number_field :numero_cotizacion, min: 1, label: "N° Cotización" %>
             </div>
             <div class="col-md-2">
@@ -64,6 +74,8 @@
         <% end %>
         </div>
       </div>
+    </div>
+    <div class="col-md-2">
     </div>
   </div>
 </div>

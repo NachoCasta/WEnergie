@@ -78,6 +78,16 @@
           <td class="total"><%= number_to_currency(cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
           <% total += cantidad %>
         </tr>
+        <tr>
+          <td class="no"></td>
+          <td class="desc"><h3>Montaje, puesta en marcha y garantía</h3></td>
+          <td class="qty"><%= 1 %></td>
+          <% cantidad = params["costo_montaje"].to_i %>
+          <td class="unit"><%= number_to_currency(cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td class="total"><%= number_to_currency(cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td class="total"><%= number_to_currency(cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+          <% total += cantidad %>
+        </tr>
       </tbody>
       <tfoot>
         <tr>
