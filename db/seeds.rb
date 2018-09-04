@@ -6,4 +6,5 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 Producto.import("public/productos.csv")
+Producto.import("public/powerfire.csv")
 Repuesto.import("public/repuestos.csv")

@@ -13,10 +13,10 @@ class Producto < ApplicationRecord
 				nombre = row["Name DE"]
 				descripcion = row["Text DE"]
 			end
-			if !nombre
+			if !nombre or nombre.nil?
 				nombre = ""
 			end
-			if !descripcion
+			if !descripcion or descripcion.nil?
 				descripcion = ""
 			end
 			nombre = nombre.gsub("|||", '"')
