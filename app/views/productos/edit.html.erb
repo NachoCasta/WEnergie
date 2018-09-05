@@ -1,6 +1,9 @@
-<h1>Editing Producto</h1>
+<div class="row borde shadow-lg p-3 mb-5 bg-white rounded">
+  <div class="col-md-12">
+	<h1>Editar Producto</h1>
 
-<%= render 'form', producto: @producto %>
-
-<%= link_to 'Show', @producto %> |
-<%= link_to 'Back', productos_path %>
+	<%= render 'form', producto: @producto %>
+	<br>
+	<%= link_to 'Volver', productos_path, :class => "btn btn-secondary" %>
+  </div>
+</div>

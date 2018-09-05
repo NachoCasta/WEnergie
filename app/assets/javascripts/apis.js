@@ -1,6 +1,14 @@
 $(document).ready(function() {
     $(".repuestos").select2({
-        theme: "bootstrap"
+        theme: "bootstrap"/*,
+        language: {
+            noResults: function() {
+                return "<input type='button' value='Agregar nuevo...' onclick='addCustom()'>";
+            }
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        }*/
     });
 });
 

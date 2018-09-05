@@ -1,29 +1,32 @@
 <p id="notice"><%= notice %></p>
+<div class="row borde shadow-lg p-3 mb-5 bg-white rounded">
+  <div class="col-md-12">
+    <p>
+      <strong>Articulo:</strong>
+      <%= @producto.articulo %>
+    </p>
 
-<p>
-  <strong>Articulo:</strong>
-  <%= @producto.articulo %>
-</p>
+    <p>
+      <strong>Precio:</strong>
+      <%= @producto.precio %>
+    </p>
 
-<p>
-  <strong>Precio:</strong>
-  <%= @producto.precio %>
-</p>
+    <p>
+      <strong>Id interna:</strong>
+      <%= @producto.id_interna %>
+    </p>
 
-<p>
-  <strong>Id interna:</strong>
-  <%= @producto.id_interna %>
-</p>
+    <p>
+      <strong>Nombre:</strong>
+      <%= @producto.nombre %>
+    </p>
 
-<p>
-  <strong>Nombre:</strong>
-  <%= @producto.nombre %>
-</p>
+    <p>
+      <strong>Descripcion:</strong>
+      <%= @producto.descripcion %>
+    </p>
 
-<p>
-  <strong>Descripcion:</strong>
-  <%= @producto.descripcion %>
-</p>
-
-<%= link_to 'Edit', edit_producto_path(@producto) %> |
-<%= link_to 'Back', productos_path %>
+    <%= link_to 'Editar', edit_producto_path(@producto) %> |
+    <%= link_to 'Volver', productos_path %>
+  </div>
+</div>
