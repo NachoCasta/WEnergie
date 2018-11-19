@@ -1,4 +1,4 @@
-<%= form_with(model: repuesto, local: true) do |form| %>
+<%= bootstrap_form_with(model: repuesto, local: true) do |form| %>
   <% if repuesto.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(repuesto.errors.count, "error") %> prohibited this repuesto from being saved:</h2>
@@ -17,21 +17,18 @@
   </div>
 
   <div class="field">
-    <%= form.label :precio %>
     <%= form.text_field :precio %>
   </div>
 
   <div class="field">
-    <%= form.label :id_interna %>
-    <%= form.number_field :id_interna %>
+    <%= form.hidden_field :id_interna, :value => 0 %>
   </div>
 
   <div class="field">
-    <%= form.label :descripcion %>
     <%= form.text_field :descripcion %>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit :class => "btn btn-primary", :label => "Actualizar Repuesto" %>
   </div>
 <% end %>

@@ -123,9 +123,9 @@ table.template_cotizacion td h3{
 
 table.template_cotizacion .no {
   color: #FFFFFF;
-  font-size: 0.6em;
+  font-size: 0.8em;
   background: #3b5430;
-  width: 60px;
+  width: 80px;
 }
 
 table.template_cotizacion .desc {

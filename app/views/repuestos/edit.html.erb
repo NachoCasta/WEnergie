@@ -1,6 +1,9 @@
-<h1>Editing Repuesto</h1>
+<div class="row borde shadow-lg p-3 mb-5 bg-white rounded">
+  <div class="col-md-12">
+	<h1>Editar Repuesto</h1>
 
-<%= render 'form', repuesto: @repuesto %>
-
-<%= link_to 'Show', @repuesto %> |
-<%= link_to 'Back', repuestos_path %>
+	<%= render 'form', repuesto: @repuesto %>
+	<br>
+	<%= link_to 'Volver', repuestos_path, :class => "btn btn-secondary" %>
+  </div>
+</div>
