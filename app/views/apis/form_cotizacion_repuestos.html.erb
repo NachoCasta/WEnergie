@@ -48,7 +48,7 @@
           </div>
           <div class="row">
             <div class="col-md-2">
-              <%= f.select :peso_total, options_for_select([["20 kg", 20], ["40 kg", 40], ["60 kg", 60]]) %>
+              <%= f.select :peso_total, options_for_select([["0 kg", 0], ["20 kg", 20], ["40 kg", 40], ["60 kg", 60]]) %>
             </div>
             <div class="col-md-2">
               <%= f.number_field :descuento, min: 0, max: 100, placeholder: "%" %>
