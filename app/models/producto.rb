@@ -21,7 +21,23 @@ class Producto < ApplicationRecord
 			end
 			nombre = nombre.gsub("|||", '"')
 			descripcion = descripcion.gsub("|||", '"')
-			Producto.create(articulo: row["Artikel"], precio: row["Netto"].gsub(".", "").gsub(",", "."), id_interna: row["id"], nombre: nombre, descripcion: descripcion)
+			precio = row["Netto"].gsub(".", "").gsub(",", ".")
+			articulo = row["Artikel"]
+			id_interna = row["id"]
+			producto = Producto.find_by(articulo: articulo)
+			if producto.nil? # No existe
+				Producto.create(articulo: articulo, precio: precio, id_interna: id_interna, nombre: nombre, descripcion: descripcion)
+				puts articulo + " no existe"
+			else
+				puts articulo + " si existe."
+				if producto.precio != precio
+					puts "Se cambiará precio de " + producto.precio.to_s + " a " + precio.to_s
+					producto.update(precio: precio)
+					puts "Nuevo precio: " + producto.precio.to_s
+				else
+					puts "Precio es igual asi que se mantiene"
+				end
+			end
 		end
 	end
 
