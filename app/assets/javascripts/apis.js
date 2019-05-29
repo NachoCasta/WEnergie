@@ -18,7 +18,6 @@ function addItem(tipo) {
     $.get("/" + tipo + "/" + id.toString() + ".json", function(data) {
         if (data.nombre.startsWith("Pack")) {
             var articulos = data.descripcion.replace(/ /g, "").split(",");
-            console.log(articulos);
             articulos.map(function(articulo) {
                 $.get("/" + tipo + "/articulo/" + articulo + ".json", function(
                     data2
@@ -33,7 +32,6 @@ function addItem(tipo) {
 }
 
 function addItemFromData(data, tipo) {
-    console.log(data);
     var { id } = data;
     var tbody = document.getElementById("dynamic-list");
     var tr = document.createElement("tr");
