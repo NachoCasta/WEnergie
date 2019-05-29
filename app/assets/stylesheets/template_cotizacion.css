@@ -16,19 +16,19 @@ a.datos {
 
 body.template_cotizacion {
   position: relative;
-  width: 21cm;  
-  height: 29.7cm; 
-  margin: 0 auto; 
+  width: 21cm;
+  height: 29.7cm;
+  margin: 0 auto;
   color: #555555;
-  background: #FFFFFF; 
-  font-family: Arial, sans-serif; 
-  font-size: 14px; 
+  background: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
 }
 
 header.clearfix {
   padding: 10px 0;
   margin-bottom: 20px;
-  border-bottom: 1px solid #AAAAAA;
+  border-bottom: 1px solid #aaaaaa;
 }
 
 #logo {
@@ -40,11 +40,29 @@ header.clearfix {
   height: 70px;
 }
 
+#logo_wenergie img {
+  height: 90px;
+}
+
+#logo_wenergie {
+  float: left;
+  margin-top: -2px;
+}
+
+#logo_kwb img {
+  height: 70px;
+}
+
+#logo_kwb {
+  float: left;
+  margin-left: 50px;
+  margin-top: 8px;
+}
+
 #company {
   float: right;
   text-align: right;
 }
-
 
 #details {
   margin-bottom: 50px;
@@ -82,7 +100,7 @@ h2.contacto {
   font-size: 2em;
   line-height: 1em;
   font-weight: normal;
-  margin: 0  0 10px 0;
+  margin: 0 0 10px 0;
 }
 
 #invoice .date {
@@ -100,13 +118,13 @@ table.template_cotizacion {
 table.template_cotizacion th,
 table.template_cotizacion td {
   padding: 20px 15px 20px 15px;
-  background: #EEEEEE;
+  background: #eeeeee;
   text-align: center;
-  border-bottom: 1px solid #FFFFFF;
+  border-bottom: 1px solid #ffffff;
 }
 
 table.template_cotizacion th {
-  white-space: nowrap;        
+  white-space: nowrap;
   font-weight: normal;
 }
 
@@ -114,7 +132,7 @@ table.template_cotizacion td {
   text-align: right;
 }
 
-table.template_cotizacion td h3{
+table.template_cotizacion td h3 {
   color: #3b5430;
   font-size: 1.2em;
   font-weight: normal;
@@ -122,7 +140,7 @@ table.template_cotizacion td h3{
 }
 
 table.template_cotizacion .no {
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 0.8em;
   background: #3b5430;
   width: 80px;
@@ -139,14 +157,14 @@ table.template_cotizacion .unit {
 }
 
 table.template_cotizacion .qty {
-  background: #DDDDDD;
+  background: #dddddd;
   width: 50px;
   font-size: 0.6em;
 }
 
 table.template_cotizacion .total {
   background: #3b5430;
-  color: #FFFFFF;
+  color: #ffffff;
   width: 50px;
   font-size: 0.6em;
 }
@@ -163,35 +181,34 @@ table.template_cotizacion tbody tr:last-child td {
 
 table.template_cotizacion tfoot td {
   padding: 10px 20px;
-  background: #FFFFFF;
+  background: #ffffff;
   border-bottom: none;
   font-size: 0.7em;
-  white-space: nowrap; 
-  border-top: 1px solid #AAAAAA; 
+  white-space: nowrap;
+  border-top: 1px solid #aaaaaa;
 }
 
 table.template_cotizacion tfoot tr:first-child td {
-  border-top: none; 
+  border-top: none;
 }
 
 table.template_cotizacion tfoot tr:last-child td {
   color: #3b5430;
   font-size: 0.8em;
-  border-top: 1px solid #3b5430; 
-
+  border-top: 1px solid #3b5430;
 }
 
 table.template_cotizacion tfoot tr td:first-child {
   border: none;
 }
 
-#thanks{
+#thanks {
   font-size: 2em;
 }
 
-#notices{
+#notices {
   padding-left: 6px;
-  border-left: 6px solid #f9b129;  
+  border-left: 6px solid #f9b129;
   margin-bottom: 50px;
 }
 
@@ -205,7 +222,7 @@ footer.template_cotizacion {
   height: 30px;
   position: absolute;
   bottom: 0;
-  border-top: 1px solid #AAAAAA;
+  border-top: 1px solid #aaaaaa;
   padding: 8px 0;
   text-align: center;
 }

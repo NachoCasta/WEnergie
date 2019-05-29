@@ -17,6 +17,15 @@ class ProductosController < ApplicationController
     end
   end
 
+
+  def show_by_articulo
+    @producto = Producto.find_by(articulo: params[:articulo])
+    respond_to do |format|
+      format.html { render :show }
+      format.json { render json: @producto.to_json }
+    end
+  end
+
   # GET /productos/new
   def new
     @producto = Producto.new

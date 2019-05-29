@@ -1,14 +1,14 @@
 <div class="container-fluid override">
   <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-1 col-xl-2">
     </div>
-    <div class="col-md-8">
+    <div class="col-md-10 col-xl-8">
       <div class="row borde shadow-lg p-3 mb-5 bg-white rounded">
         <div class="col-md-12">
     	  <%= bootstrap_form_tag url: "/apis/cotizacion_productos" do |f| %>
           <div class="row">
             <div class="col-md-12 display-3" style="text-align: center">
-              Cotización productos 
+              Cotización productos
             </div>
           </div>
           <%= render :partial => 'apis/datos_cliente', :locals => {:f => f} %>
@@ -22,14 +22,14 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label> <br> </label>
-                <%= f.submit "Agregar", onclick: "javascript:addItem('productos')", type: "button", class: 'btn btn-primary', style: "width: 100%"%>
+                <%= f.submit "Agregar", onclick: "javascript:addItem('productos')", type: "button", class: 'btn btn-primary', style: "width: 100%", data: { disable_with: false }%>
               </div>
             </div>
             <%= f.hidden_field :lista, value: "[]"%>
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="table-responsive">          
+              <div class="table-responsive">
                 <table class="table">
                   <thead>
                     <tr>
@@ -67,7 +67,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label> <br> </label>
-                <%= f.submit "Crear cotizacion", class: 'btn btn-primary', style: "width: 100%" %>
+                <%= f.submit "Crear cotizacion", class: 'btn btn-primary', style: "width: 100%", data: { disable_with: false } %>
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-1 col-xl-2">
     </div>
   </div>
 </div>

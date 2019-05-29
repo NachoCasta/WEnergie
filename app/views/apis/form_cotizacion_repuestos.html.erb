@@ -22,14 +22,14 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label> <br> </label>
-                <%= f.submit "Agregar", onclick: "javascript:addItem('repuestos')", type: "button", class: 'btn btn-primary', style: "width: 100%"%>
+                <%= f.submit "Agregar", onclick: "javascript:addItem('repuestos')", type: "button", class: 'btn btn-primary', style: "width: 100%", data: { disable_with: false }%>
               </div>
             </div>
             <%= f.hidden_field :lista, value: "[]"%>
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="table-responsive">          
+              <div class="table-responsive">
                 <table class="table">
                   <thead>
                     <tr>
@@ -62,7 +62,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label> <br> </label>
-                <%= f.submit "Crear cotizacion", class: 'btn btn-primary', style: "width: 100%" %>
+                <%= f.submit "Crear cotizacion", class: 'btn btn-primary', style: "width: 100%", data: { disable_with: false } %>
               </div>
             </div>
           </div>
