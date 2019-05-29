@@ -13,25 +13,39 @@ $(document).ready(function() {
     });
 });
 
+function getPromise(path) {
+    return new Promise(resolve => {
+        $.get(path, response => resolve(response));
+    });
+}
+
+function sleep(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+}
+
 function addItem(tipo) {
     var id = document.getElementById(tipo.slice(0, -1)).value;
     $.get("/" + tipo + "/" + id.toString() + ".json", function(data) {
         if (data.nombre.startsWith("Pack")) {
             var articulos = data.descripcion.replace(/ /g, "").split(",");
-            articulos.map(function(articulo) {
-                $.get("/" + tipo + "/articulo/" + articulo + ".json", function(
-                    data2
-                ) {
-                    addItemFromData(data2, tipo);
-                });
+            var promise = Promise.resolve();
+            articulos.forEach(articulo => {
+                var [articuloId, cantidad] = articulo
+                    .replace(/ /g, "")
+                    .split("*");
+                const path = `/${tipo}/articulo/${articuloId}.json`;
+                promise = promise
+                    .then(() => getPromise(path))
+                    .then(data => addItemFromData(data, tipo, cantidad));
             });
         } else {
-            addItemFromData(data);
+            var cantidad = document.getElementById("cantidad").value;
+            addItemFromData(data, tipo, cantidad);
         }
     });
 }
 
-function addItemFromData(data, tipo) {
+function addItemFromData(data, tipo, cantidad = 1) {
     var { id } = data;
     var tbody = document.getElementById("dynamic-list");
     var tr = document.createElement("tr");
@@ -47,7 +61,6 @@ function addItemFromData(data, tipo) {
     }
     tr.appendChild(td2);
     var td3 = document.createElement("td");
-    var cantidad = document.getElementById("cantidad").value;
     td3.appendChild(document.createTextNode(cantidad));
     tr.appendChild(td3);
     var td4 = document.createElement("td");
@@ -77,6 +90,7 @@ function addItemFromData(data, tipo) {
         repuestos.push(id);
     }
     hidden.setAttribute("value", "[" + repuestos.toString() + "]");
+    return true;
 }
 
 function removeItem(id) {
