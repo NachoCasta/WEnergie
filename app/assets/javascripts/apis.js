@@ -19,7 +19,7 @@ function addItem(tipo) {
         if (data.nombre.startsWith("Pack")) {
             var articulos = data.descripcion.replace(/ /g, "").split(",");
             console.log(articulos);
-            articulos.forEach(function(articulo) {
+            articulos.map(function(articulo) {
                 $.get("/" + tipo + "/articulo/" + articulo + ".json", function(
                     data2
                 ) {
