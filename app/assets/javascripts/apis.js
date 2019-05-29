@@ -20,9 +20,11 @@ function addItem(tipo) {
             var articulos = data.descripcion.replace(/ /g, "").split(",");
             console.log(articulos);
             articulos.forEach(function(articulo) {
-                $.get("/" + tipo + "/articulo/" + articulo + ".json", data =>
-                    addItemFromData(data, tipo)
-                );
+                $.get("/" + tipo + "/articulo/" + articulo + ".json", function(
+                    data
+                ) {
+                    addItemFromData(data, tipo);
+                });
             });
         } else {
             addItemFromData(data);
