@@ -21,9 +21,9 @@ function addItem(tipo) {
             console.log(articulos);
             articulos.forEach(function(articulo) {
                 $.get("/" + tipo + "/articulo/" + articulo + ".json", function(
-                    data
+                    data2
                 ) {
-                    addItemFromData(data, tipo);
+                    addItemFromData(data2, tipo);
                 });
             });
         } else {
