@@ -17,7 +17,7 @@ function addItem(tipo) {
     var id = document.getElementById(tipo.slice(0, -1)).value;
     $.get("/" + tipo + "/" + id.toString() + ".json", function(data) {
         if (data.nombre.startsWith("Pack")) {
-            const articulos = data.descripcion.replace(/ /g, "").split(",");
+            var articulos = data.descripcion.replace(/ /g, "").split(",");
             console.log(articulos);
             articulos.forEach(function(articulo) {
                 $.get("/" + tipo + "/articulo/" + articulo + ".json", data =>
@@ -32,7 +32,7 @@ function addItem(tipo) {
 
 function addItemFromData(data, tipo) {
     console.log(data);
-    const { id } = data;
+    var { id } = data;
     var tbody = document.getElementById("dynamic-list");
     var tr = document.createElement("tr");
     tr.setAttribute("id", id);
