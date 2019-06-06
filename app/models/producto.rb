@@ -26,8 +26,8 @@ class Producto < ApplicationRecord
 			id_interna = row["id"]
 			producto = Producto.find_by(articulo: articulo)
 			if producto.nil? # No existe
-				Producto.create(articulo: articulo, precio: precio, id_interna: id_interna, nombre: nombre, descripcion: descripcion)
 				puts articulo + " no existe"
+				Producto.create(articulo: articulo, precio: precio, id_interna: id_interna, nombre: nombre, descripcion: descripcion)
 			else
 				puts articulo + " si existe."
 				if producto.precio != precio

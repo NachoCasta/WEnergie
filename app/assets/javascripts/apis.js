@@ -26,7 +26,7 @@ function sleep(time) {
 function addItem(tipo) {
     var id = document.getElementById(tipo.slice(0, -1)).value;
     $.get("/" + tipo + "/" + id.toString() + ".json", function(data) {
-        if (data.nombre.startsWith("Pack")) {
+        if (data.nombre && data.nombre.startsWith("Pack")) {
             var articulos = data.descripcion.replace(/ /g, "").split(",");
             var promise = Promise.resolve();
             articulos.forEach(articulo => {
