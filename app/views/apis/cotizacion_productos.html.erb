@@ -11,7 +11,7 @@
       <div>Rut: 76.610.987-K</div>
       <div>Punta de Águilas Norte 9300, Casa 12</div>
       <div>Lo Barnechea, Santiago</div>
-      <div>+56 9 8232 8252</div>
+      <div>+56 9 5608 8840</div>
       <div><a class="correo" href="mailto:sonia.worner@wenergie.cl">sonia.worner@wenergie.cl</a></div>
     </div>
     </div>
@@ -99,17 +99,32 @@
           <td><%= number_to_currency(total, unit: "€", delimiter: ".", separator: ",") %></td>
           <td><%= number_to_currency(total*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
         </tr>
+        <% descuento = (params["descuento"].to_f/100)*total %>
+        <tr>
+          <td colspan="2"></td>
+          <td colspan="2">DESCUENTO <b><%= params["descuento"] + "%" %></b></td>
+          <td><%= number_to_currency(-descuento, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td><%= number_to_currency(-descuento*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+        </tr>
+        <% total_neto = total - descuento %>
+        <tr>
+          <td colspan="2"></td>
+          <td colspan="2"><b>TOTAL NETO</b></td>
+          <td><b><%= number_to_currency(total_neto, unit: "€", delimiter: ".", separator: ",") %></b></td>
+          <td><b><%= number_to_currency(total_neto*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></b></td>
+        </tr>
+        <% iva = total_neto*0.19 %>
         <tr>
           <td colspan="2"></td>
           <td colspan="2">IVA 19%</td>
-          <td><%= number_to_currency(total*0.19, unit: "€", delimiter: ".", separator: ",") %></td>
-          <td><%= number_to_currency(total*0.19*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+          <td><%= number_to_currency(iva, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td><%= number_to_currency(iva*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
         </tr>
         <tr>
           <td colspan="2"></td>
           <td colspan="2">TOTAL</td>
-          <td><%= number_to_currency(total*1.19, unit: "€", delimiter: ".", separator: ",") %></td>
-          <td><%= number_to_currency(total*1.19*euro, precision: 0, delimiter: ".", separator: ",") %></td>
+          <td><%= number_to_currency(total_neto*1.19, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td><%= number_to_currency(total_neto*1.19*euro, precision: 0, delimiter: ".", separator: ",") %></td>
         </tr>
       </tfoot>
     </table>

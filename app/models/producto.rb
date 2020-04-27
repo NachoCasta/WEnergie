@@ -1,5 +1,6 @@
 class Producto < ApplicationRecord
 	require "csv"
+	# Hay que reemplazar todos los "" con ||| antes de importar
 
 	def self.import(file)
 		CSV.foreach(file, col_sep: ";", encoding: 'iso-8859-1:utf-8', headers: true, quote_char: '"') do |row|

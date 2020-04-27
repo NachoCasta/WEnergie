@@ -53,21 +53,19 @@
             <div class="col-md-2">
               <%= f.number_field :costo_montaje, min: 1, label: "Costo Montaje", placeholder: "€" %>
             </div>
-            <!--
             <div class="col-md-2">
-              <%= f.number_field :descuento, min: 0, max: 100, placeholder: "%" %>
+              <%= f.number_field :descuento, value: 0, min: 0, max: 100, placeholder: "%" %>
             </div>
-            -->
             <div class="col-md-2">
               <%= f.number_field :numero_cotizacion, min: 1, label: "N° Cotización" %>
             </div>
             <div class="col-md-2">
-              <%= f.text_field :euro, value: "790" %>
+              <%= f.text_field :euro, value: "950" %>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
               <div class="form-group">
                 <label> <br> </label>
-                <%= f.submit "Crear cotizacion", class: 'btn btn-primary', style: "width: 100%", data: { disable_with: false } %>
+                <%= f.submit "Crear", class: 'btn btn-primary', style: "width: 100%", data: { disable_with: false } %>
               </div>
             </div>
           </div>
