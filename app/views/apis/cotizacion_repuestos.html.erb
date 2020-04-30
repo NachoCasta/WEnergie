@@ -83,20 +83,22 @@
         </tr>
       </tbody>
       <tfoot style="display: table-row-group">
-      <tr>
-        <td colspan="2"></td>
-        <td colspan="2">SUBTOTAL</td>
-        <td><%= number_to_currency(total, unit: "€", delimiter: ".", separator: ",") %></td>
-        <td><%= number_to_currency(total*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
-      </tr>
       <% descuento = (params["descuento"].to_f/100)*total %>
-      <tr>
-        <td colspan="2"></td>
-        <td colspan="2">DESCUENTO <b><%= params["descuento"] + "%" %></b></td>
-        <td><%= number_to_currency(-descuento, unit: "€", delimiter: ".", separator: ",") %></td>
-        <td><%= number_to_currency(-descuento*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
-      </tr>
       <% total_neto = total - descuento %>
+      <% if descuento > 0 %>
+        <tr>
+          <td colspan="2"></td>
+          <td colspan="2">SUBTOTAL</td>
+          <td><%= number_to_currency(total, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td><%= number_to_currency(total*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+        </tr>
+        <tr>
+          <td colspan="2"></td>
+          <td colspan="2">DESCUENTO <b><%= params["descuento"] + "%" %></b></td>
+          <td><%= number_to_currency(-descuento, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td><%= number_to_currency(-descuento*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+        </tr>
+      <% end %>
       <tr>
         <td colspan="2"></td>
         <td colspan="2"><b>TOTAL NETO</b></td>
