@@ -76,10 +76,10 @@
           <td class="desc"><%= "Transporte FedEx #{params["peso_total"]} kg" %></td>
           <td class="qty"><%= 1 %></td>
           <% cantidad = params["peso_total"].to_i/20 %>
-          <td class="unit"><%= number_to_currency(cantidad*150, unit: "€", delimiter: ".", separator: ",") %></td>
-          <td class="total"><%= number_to_currency(150*cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
-          <td class="total"><%= number_to_currency(150*cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
-          <% total += 150*cantidad %>
+          <td class="unit"><%= number_to_currency(cantidad*200, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td class="total"><%= number_to_currency(200*cantidad, unit: "€", delimiter: ".", separator: ",") %></td>
+          <td class="total"><%= number_to_currency(200*cantidad*euro, precision: 0, precision: 0, delimiter: ".", separator: ",") %></td>
+          <% total += 200*cantidad %>
         </tr>
       </tbody>
       <tfoot style="display: table-row-group">
