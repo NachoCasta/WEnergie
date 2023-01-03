@@ -3,7 +3,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Toolbar from "@mui/material/Toolbar";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import Copyright from "./Copyright";
@@ -15,11 +14,6 @@ import { Outlet, useLocation, useNavigate } from "react-router";
 const mdTheme = createTheme();
 
 const items = [
-  {
-    text: "Dashboard",
-    icon: <DashboardIcon />,
-    path: "/dashboard",
-  },
   {
     text: "Cotizaciones",
     icon: <ShoppingCartIcon />,

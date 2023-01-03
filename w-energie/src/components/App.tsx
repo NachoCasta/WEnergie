@@ -20,8 +20,7 @@ const router = createBrowserRouter(
         element={<QuoteDocumentViewer />}
       />
       <Route path="/" element={<Layout />}>
-        <Route index element={<Navigate to="dashboard" />} />
-        <Route path="dashboard" element={<div>dashboard</div>} />
+        <Route index element={<Navigate to="cotizaciones" />} />
         <Route path="cotizaciones">
           <Route index element={<Quotes />} />
           <Route path="nueva" element={<NewQuote />} />
