@@ -29,6 +29,7 @@ export default function NewQuote() {
         }))
       ).then((products) => setProducts(products));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialProducts?.toString()]);
   const handleAdd = async (productId: string) => {
     if (products.some((p) => p.id === productId)) {
@@ -304,10 +305,10 @@ function Delivery({ products }: DeliveryProps) {
       0
     );
     setWeight(String(totalWeight));
-    setDeliveryCost(
-      String(totalWeight * Number.parseFloat(deliveryCostPerKg || "19"))
+    setDeliveryCost((value: string) =>
+      String(totalWeight * Number.parseFloat(value || "19"))
     );
-  }, [products]);
+  }, [products, setWeight, setDeliveryCost]);
   return (
     <Grid item lg={6}>
       <Grid container spacing={2}>
@@ -420,17 +421,6 @@ function Others() {
       </Grid>
     </Grid>
   );
-}
-
-function maybeParseInt(value: string | null): number | null {
-  if (value != null) {
-    try {
-      return Number.parseInt(value);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-  return null;
 }
 
 type Values = {

@@ -6,7 +6,7 @@ export default function useInput(
 ): [
   string,
   (event: React.ChangeEvent<HTMLInputElement>) => void,
-  (value: string | (() => string)) => void
+  (value: string | ((value: string) => string)) => void
 ] {
   const [state, setState] = useState<string>(initialValue);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
