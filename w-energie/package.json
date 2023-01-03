@@ -34,7 +34,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "analyze": "source-map-explorer 'build/static/js/*.js' --html result.html"
   },
   "eslintConfig": {
     "extends": [
@@ -57,6 +58,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.191",
     "eslint": "^8.31.0",
-    "eslint-config-react-app": "^7.0.1"
+    "eslint-config-react-app": "^7.0.1",
+    "source-map-explorer": "^2.5.3"
   }
 }

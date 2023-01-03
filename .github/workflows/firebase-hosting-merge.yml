@@ -18,3 +18,4 @@ jobs:
                   firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_W_ENERGIE }}"
                   channelId: live
                   projectId: w-energie
+                  entryPoint: "./w-energie"
