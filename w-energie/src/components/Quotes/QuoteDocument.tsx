@@ -203,8 +203,9 @@ function Table({ quote }: TableProps) {
       price: quote.installationCost,
     },
   ];
-  const subtotal = getSubtotalPrice(quote);
+  const subtotalPreDiscount = getSubtotalPrice(quote, false);
   const totalDiscount = getTotalDiscount(quote);
+  const subtotal = getSubtotalPrice(quote);
   const tax = getTotalTax(quote);
   const total = getTotalPrice(quote);
   return (
@@ -265,14 +266,27 @@ function Table({ quote }: TableProps) {
           </View>
         </View>
       ))}
-      <TableFooterRow price={subtotal} euroToClp={euroToClp} first>
+      {totalDiscount > 0 && (
+        <>
+          <TableFooterRow
+            price={subtotalPreDiscount}
+            euroToClp={euroToClp}
+            first
+          >
+            SUBTOTAL NETO
+          </TableFooterRow>
+          <TableFooterRow price={-totalDiscount} euroToClp={euroToClp}>
+            DESCUENTO {discount}%
+          </TableFooterRow>
+        </>
+      )}
+      <TableFooterRow
+        price={subtotal}
+        euroToClp={euroToClp}
+        first={totalDiscount === 0}
+      >
         TOTAL NETO
       </TableFooterRow>
-      {totalDiscount > 0 && (
-        <TableFooterRow price={-totalDiscount} euroToClp={euroToClp}>
-          DESCUENTO {discount}%
-        </TableFooterRow>
-      )}
       <TableFooterRow price={tax} euroToClp={euroToClp}>
         IVA 19%
       </TableFooterRow>
@@ -302,7 +316,6 @@ function TableFooterRow({
   let extraTextStyles = {};
   if (first) {
     extraRowStyles = { borderTop: "none" };
-    extraTextStyles = { fontFamily: "Helvetica-Bold" };
   } else if (last) {
     extraRowStyles = { borderTop: `1px solid ${GREEN}` };
     extraTextStyles = {

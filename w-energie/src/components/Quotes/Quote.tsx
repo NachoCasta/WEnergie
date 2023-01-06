@@ -162,14 +162,15 @@ function Products({ quote }: ProductsProps) {
       price: quote.installationCost,
     },
   ];
-  const subtotal = getSubtotalPrice(quote);
+  const subtotalPreDiscount = getSubtotalPrice(quote, false);
   const totalDiscount = getTotalDiscount(quote);
+  const subtotal = getSubtotalPrice(quote);
   const tax = getTotalTax(quote);
   const total = getTotalPrice(quote);
   return (
     <Paper sx={{ p: 2 }}>
       <Title>Productos</Title>
-      <TableContainer sx={{ maxHeight: 440 }}>
+      <TableContainer>
         <Table stickyHeader size="small">
           <TableHead>
             <TableRow>
@@ -192,14 +193,27 @@ function Products({ quote }: ProductsProps) {
                 </TableCell>
               </TableRow>
             ))}
-            <FooterRow price={subtotal} euroToClp={euroToClp} first>
+            {totalDiscount > 0 && (
+              <>
+                <FooterRow
+                  price={subtotalPreDiscount}
+                  euroToClp={euroToClp}
+                  first
+                >
+                  Subtotal Neto
+                </FooterRow>
+                <FooterRow price={-totalDiscount} euroToClp={euroToClp}>
+                  Descuento {discount}%
+                </FooterRow>
+              </>
+            )}
+            <FooterRow
+              price={subtotal}
+              euroToClp={euroToClp}
+              first={totalDiscount === 0}
+            >
               Total Neto
             </FooterRow>
-            {totalDiscount > 0 && (
-              <FooterRow price={-totalDiscount} euroToClp={euroToClp}>
-                Descuento {discount}%
-              </FooterRow>
-            )}
             <FooterRow price={tax} euroToClp={euroToClp}>
               IVA
             </FooterRow>
@@ -228,7 +242,7 @@ function FooterRow({
 }: FooterRowProps) {
   return (
     <TableRow>
-      {first && <TableCell colSpan={2} rowSpan={4} />}
+      {first && <TableCell colSpan={2} rowSpan={5} />}
       <TableCell>
         <Typography variant="subtitle2">{children}</Typography>
       </TableCell>

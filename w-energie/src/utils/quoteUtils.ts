@@ -1,34 +1,33 @@
 import { Quote } from "database/quotes/quoteCollection";
 import _ from "lodash";
 
-export function getSubtotalPrice(quote: Quote): number {
+export function getSubtotalPrice(
+  quote: Quote,
+  discount: boolean = true
+): number {
   const productsTotal = quote.products.reduce(
     (acc, product) => acc + product.price * product.quantity,
     0
   );
   const subtotal = productsTotal + quote.deliveryCost + quote.installationCost;
-  return subtotal;
+  if (!discount) return subtotal;
+  return (subtotal * (100 - quote.discount)) / 100;
 }
 
 export function getTotalDiscount(quote: Quote): number {
-  const subtotal = getSubtotalPrice(quote);
-  const totalDiscount = (subtotal * quote.discount) / 100;
-  return totalDiscount;
+  return getSubtotalPrice(quote, false) - getSubtotalPrice(quote, true);
 }
 
 export function getTotalTax(quote: Quote): number {
   const subtotal = getSubtotalPrice(quote);
-  const totalDiscount = getTotalDiscount(quote);
-  const tax = (subtotal - totalDiscount) * 0.19;
+  const tax = subtotal * 0.19;
   return tax;
 }
 
 export function getTotalPrice(quote: Quote): number {
   const subtotal = getSubtotalPrice(quote);
-  const discount = getTotalDiscount(quote);
   const tax = getTotalTax(quote);
-  const total = subtotal - discount + tax;
-  console.log(total, subtotal * (1 - quote.discount / 100) * 1.19);
+  const total = subtotal + tax;
   return total;
 }
 
