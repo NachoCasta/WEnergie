@@ -81,7 +81,7 @@ export default function ProductForm(props: ProductFormProps) {
             InputProps={{
               endAdornment: <InputAdornment position="end">Kg</InputAdornment>,
             }}
-            inputProps={{ min: 0 }}
+            inputProps={{ min: 0, step: 0.01 }}
             defaultValue={product?.weight.toString()}
           />
         </Grid>
