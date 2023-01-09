@@ -9,9 +9,10 @@ import {
 export enum ProductType {
   Product,
   Part,
+  Custom,
 }
 
-interface ProductData {
+export interface ProductData {
   name: string;
   description: string;
   price: number;

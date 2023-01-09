@@ -11,9 +11,12 @@ import addProducts from "database/products/addProducts";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useState } from "react";
 import ProductTable from "./ProductTable";
+import { useNavigate } from "react-router-dom";
 
 export default function Products() {
   const { value: rows, loading: loadingProducts } = useAsync(getProducts, []);
+  const navigate = useNavigate();
+  const handleAdd = () => navigate("nuevo");
   const [loading, setLoading] = useState(false);
   const handleImport = async (e: any) => {
     const file = e.target.files[0];
@@ -22,14 +25,23 @@ export default function Products() {
     await addProducts(products);
     setLoading(false);
   };
+  const handleView = (productId: string) => {
+    navigate(productId);
+  };
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
           <Title>Productos</Title>
           <Grid item sx={{ alignSelf: "flex-end", pb: 1 }}>
-            <Button color="primary" variant="contained" sx={{ mr: 1 }}>
-              <AddIcon /> Agregar
+            <Button
+              color="primary"
+              variant="contained"
+              sx={{ mr: 1 }}
+              onClick={handleAdd}
+              startIcon={<AddIcon />}
+            >
+              Agregar
             </Button>
             <LoadingButton
               color="secondary"
@@ -49,7 +61,11 @@ export default function Products() {
               />
             </LoadingButton>
           </Grid>
-          <ProductTable products={rows ?? []} loading={loadingProducts} />
+          <ProductTable
+            products={rows ?? []}
+            loading={loadingProducts}
+            onView={handleView}
+          />
         </Paper>
       </Grid>
     </Grid>

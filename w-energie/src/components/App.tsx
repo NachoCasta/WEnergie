@@ -11,6 +11,8 @@ import NewQuote from "components/Quotes/NewQuote";
 import Quotes from "./Quotes/Quotes";
 import Quote from "./Quotes/Quote";
 import { QuoteDocumentViewer } from "./Quotes/QuoteDocument";
+import NewProduct from "./Products/NewProduct";
+import Product from "./Products/Product";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,7 +30,11 @@ const router = createBrowserRouter(
             <Route index element={<Quote />} />
           </Route>
         </Route>
-        <Route path="productos" element={<Products />} />
+        <Route path="productos">
+          <Route index element={<Products />} />
+          <Route path="nuevo" element={<NewProduct />} />
+          <Route path=":productId" element={<Product />} />
+        </Route>
       </Route>
     </>
   )

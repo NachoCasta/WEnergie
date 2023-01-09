@@ -9,11 +9,13 @@ import { Product } from "database/products/productCollection";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { QuoteProduct } from "database/quotes/quoteCollection";
 import AddIcon from "@mui/icons-material/Add";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 type ProductsTableProps<P> = {
   products: Array<P>;
   onAdd?: (productId: string) => void;
   onRemove?: (productId: string) => void;
+  onView?: (productId: string) => void;
   loading?: boolean;
   showQuantity?: boolean;
 };
@@ -21,7 +23,7 @@ type ProductsTableProps<P> = {
 export default function ProductTable<P extends Product>(
   props: ProductsTableProps<P>
 ) {
-  const { products, onRemove, onAdd, showQuantity = false } = props;
+  const { products, onRemove, onAdd, onView, showQuantity = false } = props;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -46,7 +48,7 @@ export default function ProductTable<P extends Product>(
               <TableCell>Peso</TableCell>
               {showQuantity && <TableCell>Cantidad</TableCell>}
               <TableCell>Precio</TableCell>
-              {(onAdd || onRemove) && (
+              {(onAdd || onRemove || onView) && (
                 <TableCell align="center">Acciones</TableCell>
               )}
             </TableRow>
@@ -74,6 +76,11 @@ export default function ProductTable<P extends Product>(
                     {onRemove && (
                       <IconButton onClick={() => onRemove(product.id)}>
                         <RemoveIcon />
+                      </IconButton>
+                    )}
+                    {onView && (
+                      <IconButton onClick={() => onView(product.id)}>
+                        <VisibilityIcon />
                       </IconButton>
                     )}
                   </TableCell>
