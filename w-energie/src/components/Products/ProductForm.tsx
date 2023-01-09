@@ -44,7 +44,7 @@ export default function ProductForm(props: ProductFormProps) {
     >
       <Grid container spacing={2}>
         <Grid item lg={12}>
-          <SubTitle>Producto</SubTitle>
+          <SubTitle>{getTitle(variant)}</SubTitle>
         </Grid>
         <Grid item lg={6}>
           <TextField
@@ -109,6 +109,15 @@ export default function ProductForm(props: ProductFormProps) {
       </Grid>
     </Paper>
   );
+}
+
+function getTitle(variant: ProductFormVariant): string {
+  switch (variant) {
+    case ProductFormVariant.New:
+      return "Nuevo producto";
+    case ProductFormVariant.Edit:
+      return "Editar producto";
+  }
 }
 
 function getSubmitText(variant: ProductFormVariant): string {
