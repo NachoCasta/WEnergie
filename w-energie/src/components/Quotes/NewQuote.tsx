@@ -324,6 +324,9 @@ function Delivery({ products }: DeliveryProps) {
             fullWidth
             value={weight}
             onChange={handleWeightChange}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">Kg</InputAdornment>,
+            }}
             inputProps={{ min: 0, step: 0.001 }}
           />
         </Grid>
