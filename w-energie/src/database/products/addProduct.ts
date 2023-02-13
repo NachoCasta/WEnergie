@@ -2,7 +2,6 @@ import {
   setDoc,
   doc,
   query,
-  limit,
   getCountFromServer,
   where,
 } from "firebase/firestore";
@@ -17,7 +16,7 @@ export default async function addProduct(
   product: ProductData
 ): Promise<string> {
   const snapshot = await getCountFromServer(
-    query(productCollection, where("type", "==", ProductType.Custom), limit(1))
+    query(productCollection, where("type", "==", ProductType.Custom))
   );
   const count = snapshot.data().count;
   const productNumber = count + 1;
