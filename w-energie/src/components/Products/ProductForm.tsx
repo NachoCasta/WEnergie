@@ -67,7 +67,7 @@ export default function ProductForm(props: ProductFormProps) {
                 <InputAdornment position="start">€</InputAdornment>
               ),
             }}
-            inputProps={{ min: 0 }}
+            inputProps={{ min: 0, step: 0.01 }}
             defaultValue={product?.price.toString()}
           />
         </Grid>
