@@ -28,8 +28,8 @@ export default function ProductForm(props: ProductFormProps) {
     const productData = {
       name: data.get("name") as string,
       description: data.get("description") as string,
-      price: Number.parseInt(data.get("price") as string),
-      weight: Number.parseInt(data.get("weight") as string),
+      price: Number.parseFloat(data.get("price") as string),
+      weight: Number.parseFloat(data.get("weight") as string),
       type: product?.type ?? ProductType.Custom,
     };
     setLoading(true);

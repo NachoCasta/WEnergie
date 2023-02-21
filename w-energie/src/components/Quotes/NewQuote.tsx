@@ -77,9 +77,11 @@ export default function NewQuote() {
       date: Timestamp.now(),
       deliveryTerm: data.get("deliveryTerm") as string,
       paymentForm: data.get("paymentForm") as string,
-      deliveryCost: Number.parseInt(data.get("deliveryCost") as string),
-      installationCost: Number.parseInt(data.get("installationCost") as string),
-      weight: Number.parseInt(data.get("weight") as string),
+      deliveryCost: Number.parseFloat(data.get("deliveryCost") as string),
+      installationCost: Number.parseFloat(
+        data.get("installationCost") as string
+      ),
+      weight: Number.parseFloat(data.get("weight") as string),
       euroToClp: Number.parseInt(data.get("euroToClp") as string),
       discount: Number.parseInt(data.get("discount") as string),
     };
