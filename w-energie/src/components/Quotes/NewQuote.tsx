@@ -54,6 +54,11 @@ export default function NewQuote() {
         .filter((p) => p.quantity > 0)
     );
   };
+  const handleQuantityChange = (productId: string, quantity: number) => {
+    setProducts(
+      products.map((p) => (p.id === productId ? { ...p, quantity } : p))
+    );
+  };
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -98,6 +103,7 @@ export default function NewQuote() {
               products={products}
               onAdd={handleAdd}
               onRemove={handleRemove}
+              onQuantityChange={handleQuantityChange}
             />
             <Delivery products={products} />
             <Others />
@@ -216,9 +222,15 @@ type ProductsProps = {
   products: Array<QuoteProduct>;
   onAdd: (productId: string) => Promise<void>;
   onRemove: (productId: string) => void;
+  onQuantityChange: (productId: string, quantity: number) => void;
 };
 
-function Products({ products, onAdd, onRemove }: ProductsProps) {
+function Products({
+  products,
+  onAdd,
+  onRemove,
+  onQuantityChange,
+}: ProductsProps) {
   const [productId, handleProductIdChange] = useInput("", () => {
     setAddError("");
   });
@@ -278,7 +290,7 @@ function Products({ products, onAdd, onRemove }: ProductsProps) {
         <ProductTable
           products={products}
           onRemove={onRemove}
-          onAdd={onAdd}
+          onQuantityChange={onQuantityChange}
           showQuantity
         />
       </Grid>

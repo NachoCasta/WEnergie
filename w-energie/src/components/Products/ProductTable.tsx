@@ -6,15 +6,15 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { useState } from "react";
 import { Product } from "database/products/productCollection";
-import RemoveIcon from "@mui/icons-material/Remove";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { QuoteProduct } from "database/quotes/quoteCollection";
-import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import Input from "@mui/material/Input";
 
 type ProductsTableProps<P> = {
   products: Array<P>;
-  onAdd?: (productId: string) => void;
   onRemove?: (productId: string) => void;
+  onQuantityChange?: (productId: string, quantity: number) => void;
   onView?: (productId: string) => void;
   loading?: boolean;
   showQuantity?: boolean;
@@ -23,7 +23,13 @@ type ProductsTableProps<P> = {
 export default function ProductTable<P extends Product>(
   props: ProductsTableProps<P>
 ) {
-  const { products, onRemove, onAdd, onView, showQuantity = false } = props;
+  const {
+    products,
+    onRemove,
+    onQuantityChange,
+    onView,
+    showQuantity = false,
+  } = props;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -48,7 +54,7 @@ export default function ProductTable<P extends Product>(
               <TableCell>Peso</TableCell>
               {showQuantity && <TableCell>Cantidad</TableCell>}
               <TableCell>Precio</TableCell>
-              {(onAdd || onRemove || onView) && (
+              {(onRemove || onView) && (
                 <TableCell align="center">Acciones</TableCell>
               )}
             </TableRow>
@@ -56,36 +62,59 @@ export default function ProductTable<P extends Product>(
           <TableBody>
             {products
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((product, index) => (
-                <TableRow key={`${product.id}-${index}`}>
-                  <TableCell>{product.id}</TableCell>
-                  <TableCell>{product.name}</TableCell>
-                  <TableCell>{product.weight}</TableCell>
-                  {showQuantity && (
-                    <TableCell>
-                      {(product as unknown as QuoteProduct).quantity}
+              .map((product, index) => {
+                let quantityCellContent;
+                if (showQuantity) {
+                  const { quantity } = product as unknown as QuoteProduct;
+                  if (onQuantityChange) {
+                    const handleChange = (
+                      e: React.ChangeEvent<HTMLInputElement>
+                    ) => {
+                      onQuantityChange(
+                        product.id,
+                        Number.parseInt(e.target.value) || 0
+                      );
+                    };
+                    quantityCellContent = (
+                      <Input
+                        name={`quantity-${product.id}`}
+                        type="number"
+                        value={quantity}
+                        onChange={handleChange}
+                        inputProps={{ min: 1 }}
+                        required
+                        sx={{ width: 70 }}
+                      />
+                    );
+                  } else {
+                    quantityCellContent = quantity;
+                  }
+                }
+
+                return (
+                  <TableRow key={`${product.id}-${index}`}>
+                    <TableCell>{product.id}</TableCell>
+                    <TableCell>{product.name}</TableCell>
+                    <TableCell>{product.weight}</TableCell>
+                    {quantityCellContent != null && (
+                      <TableCell>{quantityCellContent}</TableCell>
+                    )}
+                    <TableCell>{`$${product.price}`}</TableCell>
+                    <TableCell align="center">
+                      {onRemove && (
+                        <IconButton onClick={() => onRemove(product.id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      )}
+                      {onView && (
+                        <IconButton onClick={() => onView(product.id)}>
+                          <VisibilityIcon />
+                        </IconButton>
+                      )}
                     </TableCell>
-                  )}
-                  <TableCell>{`$${product.price}`}</TableCell>
-                  <TableCell align="center">
-                    {onAdd && (
-                      <IconButton onClick={() => onAdd(product.id)}>
-                        <AddIcon />
-                      </IconButton>
-                    )}
-                    {onRemove && (
-                      <IconButton onClick={() => onRemove(product.id)}>
-                        <RemoveIcon />
-                      </IconButton>
-                    )}
-                    {onView && (
-                      <IconButton onClick={() => onView(product.id)}>
-                        <VisibilityIcon />
-                      </IconButton>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>
