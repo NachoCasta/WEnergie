@@ -41,9 +41,10 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   logos: { display: "flex", flexDirection: "row" },
-  wEnergieLogo: { height: 90, marginRight: 20 },
+  wEnergieLogo: { height: 100, marginRight: 20 },
   kwbLogo: {
-    height: 90,
+    height: 100,
+    width: 100,
     marginRight: 10,
     padding: 10,
     backgroundColor: YELLOW,
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
   clientInfo: {
     borderLeft: `6px solid ${YELLOW}`,
     paddingLeft: 5,
-    fontSize: 12,
+    fontSize: 13,
     lineHeight: 1.2,
   },
   clientName: { fontSize: 18 },
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     direction: "row",
     alignItems: "flex-end",
     paddingTop: 40,
-    fontSize: 10,
+    fontSize: 11,
   },
   tableRow: { display: "flex", flexDirection: "row", marginBottom: 1 },
   tableCell: {
@@ -86,7 +87,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  tableCellId: { width: "10%", backgroundColor: GREEN, color: "white" },
+  tableCellId: {
+    width: "10%",
+    padding: "20px 10px",
+    backgroundColor: GREEN,
+    color: "white"
+  },
   tableCellDescription: {
     width: "50%",
     backgroundColor: LIGHT_GRAY,
@@ -101,6 +107,9 @@ const styles = StyleSheet.create({
     color: "white",
     display: "flex",
     flexDirection: "row",
+  },
+  tableHeaderRow: {
+    fontSize: 10,
   },
   tableFooterRow: {
     display: "flex",
@@ -210,7 +219,7 @@ function Table({ quote }: TableProps) {
   const total = getTotalPrice(quote);
   return (
     <View style={styles.table}>
-      <View style={styles.tableRow}>
+      <View style={[styles.tableRow, styles.tableHeaderRow]}>
         <View style={[styles.tableCell, styles.tableCellId]}>
           <Text>ARTÍCULO</Text>
         </View>
@@ -340,7 +349,7 @@ function TableFooterRow({
 
 function Footer() {
   return (
-    <View style={[styles.clientInfo, { fontSize: 12 }]}>
+    <View style={[styles.clientInfo, { fontSize: 13 }]}>
       <Text>Datos de transferencia:</Text>
       <Text>W Energie SpA:</Text>
       <Text>Rut: 76.610.987-K</Text>
