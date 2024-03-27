@@ -1,9 +1,30 @@
-import { getDocs, query, orderBy } from "firebase/firestore";
+import { getDocs, query, orderBy, limit, startAfter, getDoc, doc, startAt } from "firebase/firestore";
 import quoteCollection, { Quote } from "./quoteCollection";
 
-export default async function getQuotes(): Promise<Array<Quote>> {
+import type { QueryConstraint } from "firebase/firestore";
+
+type Opts = {
+  after?: string | null,
+  at?: string | null,
+  pageSize?: number
+}
+
+export default async function getQuotes(opts: Opts): Promise<Array<Quote>> {
+  const { after, at, pageSize } = opts;
+  const queryConstraints: QueryConstraint[] = [orderBy("date", "desc")]
+  if (after != null) {
+    const afterSnap = await getDoc(doc(quoteCollection, after));
+    queryConstraints.push(startAfter(afterSnap));
+  }
+  if (at != null) {
+    const atSnap = await getDoc(doc(quoteCollection, at));
+    queryConstraints.push(startAt(atSnap));
+  }
+  if (pageSize != null) {
+    queryConstraints.push(limit(pageSize));
+  }
   const snapshot = await getDocs(
-    query(quoteCollection, orderBy("date", "desc"))
+    query(quoteCollection, ...queryConstraints)
   );
   try {
     return snapshot.docs.map((doc) => doc.data());

@@ -1,4 +1,10 @@
-import { Button, IconButton, TableContainer } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  Skeleton,
+  TableContainer,
+  TablePagination,
+} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -17,11 +23,51 @@ import { getMainProductName, getTotalPrice } from "utils/quoteUtils";
 import { Quote } from "database/quotes/quoteCollection";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import useQuotePdf from "hooks/useQuotePdf";
+import { useEffect, useRef, useState } from "react";
+import getQuotesCount from "database/quotes/getQuotesCount";
 
 export default function Quotes() {
-  const { value: quotes } = useAsync(getQuotes, []);
+  const { value: count } = useAsync(getQuotesCount, []);
   const navigate = useNavigate();
   const handleNew = () => navigate("nueva");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [after, setAfter] = useState<string | null>(null);
+  const [at, setAt] = useState<string | null>(null);
+  const { value: quotes = [], loading } = useAsync(
+    () =>
+      getQuotes({
+        after,
+        at,
+        pageSize: rowsPerPage,
+      }),
+    [after, at, rowsPerPage]
+  );
+  const pageCursorsRef = useRef<{ [page: number]: string }>({});
+  useEffect(() => {
+    if (!loading && quotes.length > 0) {
+      const cursorId = quotes[0].id;
+      pageCursorsRef.current[page] = cursorId;
+    }
+  });
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+    if (newPage > page) {
+      setAfter(quotes[quotes.length - 1].id);
+      setAt(null);
+    } else {
+      setAt(pageCursorsRef.current[newPage]);
+      setAfter(null);
+    }
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -49,12 +95,25 @@ export default function Quotes() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {quotes?.map((quote) => (
-                  <QuoteRow key={quote.id} quote={quote} />
-                ))}
+                {loading ? (
+                  <RowSkeleton count={rowsPerPage} />
+                ) : (
+                  quotes.map((quote) => (
+                    <QuoteRow key={quote.id} quote={quote} />
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={count ?? -1}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </Paper>
       </Grid>
     </Grid>
@@ -85,5 +144,31 @@ function QuoteRow({ quote }: QuoteRowProps) {
         </IconButton>
       </TableCell>
     </TableRow>
+  );
+}
+
+function RowSkeleton(props: { count: number }) {
+  return (
+    <>
+      {[...Array(props.count)].map((row, index) => (
+        <TableRow key={index}>
+          <TableCell component="th" scope="row">
+            <Skeleton animation="wave" variant="text" />
+          </TableCell>
+          <TableCell>
+            <Skeleton animation="wave" variant="text" />
+          </TableCell>
+          <TableCell>
+            <Skeleton animation="wave" variant="text" />
+          </TableCell>
+          <TableCell>
+            <Skeleton animation="wave" variant="text" />
+          </TableCell>
+          <TableCell>
+            <Skeleton animation="wave" variant="text" />
+          </TableCell>
+        </TableRow>
+      ))}
+    </>
   );
 }
