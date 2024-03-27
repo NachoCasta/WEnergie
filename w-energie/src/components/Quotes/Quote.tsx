@@ -19,6 +19,7 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import CopyAllIcon from "@mui/icons-material/CopyAll";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useQuoteFromParams } from "hooks/useQuote";
 import {
   getSubtotalPrice,
@@ -28,6 +29,7 @@ import {
 } from "utils/quoteUtils";
 import { formatClp, formatEuro } from "utils/formatCurrency";
 import useQuotePdf from "hooks/useQuotePdf";
+import deleteQuote from "database/quotes/deleteQuote";
 
 export default function QuoteView() {
   const [quote] = useQuoteFromParams();
@@ -115,6 +117,10 @@ function Actions({ quote }: ActionsProps) {
     });
     navigate(`/cotizaciones/nueva?${params.toString()}`);
   };
+  const handleDelete = () => {
+    deleteQuote(quote.id);
+    navigate("/cotizaciones");
+  };
   return (
     <Paper sx={{ p: 2, height: "100%" }}>
       <Title>Acciones</Title>
@@ -138,6 +144,17 @@ function Actions({ quote }: ActionsProps) {
             disabled={loading}
           >
             PDF
+          </Button>
+        </Grid>
+        <Grid item xs={6}>
+          <Button
+            variant="outlined"
+            color="error"
+            startIcon={<DeleteIcon />}
+            fullWidth
+            onClick={handleDelete}
+          >
+            Eliminar
           </Button>
         </Grid>
       </Grid>
