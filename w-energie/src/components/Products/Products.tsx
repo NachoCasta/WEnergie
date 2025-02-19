@@ -3,7 +3,6 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Title from "components/Common/Title";
 import getProducts from "database/products/getProducts";
-import { useAsync } from "react-use";
 import AddIcon from "@mui/icons-material/Add";
 import UploadIcon from "@mui/icons-material/Upload";
 import parseProducts from "utils/parseProducts";
@@ -12,9 +11,14 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { useState } from "react";
 import ProductTable from "./ProductTable";
 import { useNavigate } from "react-router-dom";
+import usePagination from "hooks/usePagination";
+import getProductsCount from "database/products/getProductsCount";
 
 export default function Products() {
-  const { value: rows, loading: loadingProducts } = useAsync(getProducts, []);
+  const [products, loadingProducts, paginationProps] = usePagination(
+    getProducts,
+    getProductsCount
+  );
   const navigate = useNavigate();
   const handleAdd = () => navigate("nuevo");
   const [loading, setLoading] = useState(false);
@@ -62,7 +66,8 @@ export default function Products() {
             </LoadingButton>
           </Grid>
           <ProductTable
-            products={rows ?? []}
+            products={products}
+            paginationProps={paginationProps}
             loading={loadingProducts}
             onView={handleView}
           />

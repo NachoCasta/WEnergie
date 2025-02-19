@@ -1,12 +1,7 @@
 import { TablePaginationProps } from "@mui/material";
+import { GetDataOpts } from "database/getData";
 import { useEffect, useRef, useState } from "react";
 import { useAsync } from "react-use";
-
-export type GetDataOpts = {
-  after?: string | null;
-  at?: string | null;
-  pageSize?: number;
-};
 
 interface Data {
   id: string;

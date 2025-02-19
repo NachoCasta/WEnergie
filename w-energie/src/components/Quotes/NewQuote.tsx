@@ -1,4 +1,9 @@
-import { IconButton, InputAdornment, TextField } from "@mui/material";
+import {
+  IconButton,
+  InputAdornment,
+  TablePaginationProps,
+  TextField,
+} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Title, { SubTitle } from "components/Common/Title";
@@ -15,6 +20,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { Timestamp } from "firebase/firestore";
 import { useLocation } from "react-use";
 import _ from "lodash";
+import { Product } from "database/products/productCollection";
 
 export default function NewQuote() {
   const [products, setProducts] = useState<Array<QuoteProduct>>([]);
@@ -274,6 +280,7 @@ function Products({
       handleAdd();
     }
   };
+  const [currentPageProducts, paginationProps] = usePagination(products);
   return (
     <>
       <Grid item lg={9} sx={{ display: "flex", alignItems: "center" }}>
@@ -307,10 +314,12 @@ function Products({
       </Grid>
       <Grid item lg={12}>
         <ProductTable
-          products={products}
+          products={currentPageProducts}
+          paginationProps={paginationProps}
           onRemove={onRemove}
           onQuantityChange={onQuantityChange}
           showQuantity
+          maxHeight={440}
         />
       </Grid>
     </>
@@ -501,4 +510,32 @@ function useInitialValues(): Values {
     discount: params.get("discount"),
   };
   return values;
+}
+
+function usePagination(products: Product[]): [Product[], TablePaginationProps] {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+  const currentPageProducts = products.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+  const paginationProps = {
+    count: products.length,
+    rowsPerPage: rowsPerPage,
+    page: page,
+    onPageChange: handleChangePage,
+    onRowsPerPageChange: handleChangeRowsPerPage,
+  };
+  return [currentPageProducts, paginationProps];
 }

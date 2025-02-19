@@ -1,12 +1,9 @@
-import { getDocs, query, limit } from "firebase/firestore";
 import productCollection, { Product } from "./productCollection";
 
-export default async function getProducts(): Promise<Array<Product>> {
-  const snapshot = await getDocs(query(productCollection, limit(50)));
-  try {
-    return snapshot.docs.map((doc) => doc.data());
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
+import getData, { GetDataOpts } from "database/getData";
+
+export default async function getProducts(
+  opts: GetDataOpts
+): Promise<Array<Product>> {
+  return getData(productCollection, [], opts);
 }
