@@ -444,7 +444,7 @@ function Others() {
               ),
             }}
             inputProps={{ min: 1 }}
-            defaultValue={initialValues.euroToClp ?? 950}
+            defaultValue={initialValues.euroToClp ?? 1010}
           />
         </Grid>
         <Grid item lg={4}>
