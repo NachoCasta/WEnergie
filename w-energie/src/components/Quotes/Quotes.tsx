@@ -158,10 +158,12 @@ function QuoteRow({ quote }: QuoteRowProps) {
         {formatClp(getTotalPrice(quote) * quote.euroToClp)}
       </TableCell>
       <TableCell align="center">
-        <IconButton onClick={() => navigate(quote.id)}>
-          <VisibilityIcon />
-        </IconButton>
-        <QuoteDownloadButton quote={quote} />
+        <Grid container wrap="nowrap">
+          <IconButton onClick={() => navigate(quote.id)}>
+            <VisibilityIcon />
+          </IconButton>
+          <QuoteDownloadButton quote={quote} />
+        </Grid>
       </TableCell>
     </TableRow>
   );
