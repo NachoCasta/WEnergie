@@ -13,7 +13,7 @@ import parseProducts from "utils/parseProducts";
 import UploadIcon from "@mui/icons-material/Upload";
 import { ProductType } from "database/products/productCollection";
 import BuildIcon from "@mui/icons-material/Build";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import InventoryIcon from "@mui/icons-material/Inventory";
 
 export default function ProductImportButton() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -118,7 +118,7 @@ function ImportMenu(props: MenuProps) {
     >
       <MenuItem component="label">
         <ListItemIcon>
-          <ShoppingCartIcon fontSize="small" />
+          <InventoryIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>Productos</ListItemText>
         <input

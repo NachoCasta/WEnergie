@@ -3,7 +3,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Toolbar from "@mui/material/Toolbar";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import Copyright from "./Copyright";
 import AppBar from "./AppBar";
@@ -16,7 +16,7 @@ const mdTheme = createTheme();
 const items = [
   {
     text: "Cotizaciones",
-    icon: <ShoppingCartIcon />,
+    icon: <RequestQuoteIcon />,
     path: "/cotizaciones",
   },
   {
