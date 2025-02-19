@@ -21,7 +21,7 @@ export default function useQuotePdf(quote?: Quote): [() => void, boolean] {
     a.click();
     document.body.removeChild(a);
   };
-  return [handleDownload, loading];
+  return [handleDownload, loading || !url];
 }
 
 function getPdfName(quote: Quote): string {

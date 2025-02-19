@@ -26,10 +26,9 @@ import {
   getTotalPrice,
 } from "utils/quoteUtils";
 import { Quote } from "database/quotes/quoteCollection";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import useQuotePdf from "hooks/useQuotePdf";
 import { useEffect, useMemo, useRef, useState } from "react";
 import getQuotesCount from "database/quotes/getQuotesCount";
+import QuoteDownloadButton from "./QuoteDownloadButton";
 
 export default function Quotes() {
   const [search, setSearch] = useState<string | null>(null);
@@ -90,7 +89,6 @@ export default function Quotes() {
                   size="small"
                   fullWidth
                   label="Buscar"
-                  value={search}
                   onChange={(e) => {
                     setSearch(e.target.value);
                   }}
@@ -151,7 +149,6 @@ type QuoteRowProps = {
 
 function QuoteRow({ quote }: QuoteRowProps) {
   const navigate = useNavigate();
-  const [handlePdf, loading] = useQuotePdf(quote);
   return (
     <TableRow>
       <TableCell>{quote.id}</TableCell>
@@ -164,9 +161,7 @@ function QuoteRow({ quote }: QuoteRowProps) {
         <IconButton onClick={() => navigate(quote.id)}>
           <VisibilityIcon />
         </IconButton>
-        <IconButton onClick={handlePdf} disabled={loading}>
-          <PictureAsPdfIcon />
-        </IconButton>
+        <QuoteDownloadButton quote={quote} />
       </TableCell>
     </TableRow>
   );
