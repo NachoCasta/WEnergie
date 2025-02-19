@@ -1,6 +1,6 @@
 import { getCountFromServer, query } from "firebase/firestore";
 import productCollection from "./productCollection";
-import { queryByIdConstraints } from "./getProducts";
+import { queryByIdConstraints } from "database/queryByIdConstraints";
 
 export default async function getProductsCount(
   filter?: string
