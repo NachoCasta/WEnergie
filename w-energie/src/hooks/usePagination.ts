@@ -11,12 +11,12 @@ type GetData<Data> = (opts: GetDataOpts) => Promise<Data[]>;
 
 type Result<Data> = [Data[], boolean, TablePaginationProps, number];
 
-export default function usePagination<D extends Data, Opts>(
+export default function usePagination<D extends Data>(
   getData: GetData<D>,
   getDataCount: () => Promise<number>,
-  opts?: Opts
+  deps: any[] = []
 ): Result<D> {
-  const { value: count } = useAsync(getDataCount, []);
+  const { value: count } = useAsync(getDataCount, deps);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [after, setAfter] = useState<string | null>(null);
@@ -27,9 +27,8 @@ export default function usePagination<D extends Data, Opts>(
         after,
         at,
         pageSize: rowsPerPage,
-        ...opts,
       }),
-    [after, at, rowsPerPage, ...Object.values(opts ?? {})]
+    [after, at, rowsPerPage, ...deps]
   );
 
   const pageCursorsRef = useRef<{ [page: number]: string }>({});

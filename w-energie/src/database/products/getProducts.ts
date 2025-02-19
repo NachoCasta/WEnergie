@@ -11,13 +11,11 @@ export default async function getProducts(
   opts: GetProductOpts
 ): Promise<Array<Product>> {
   const { filter } = opts;
-  const constraints = [];
-  if (filter) {
-    constraints.push(
-      orderBy(documentId()),
-      startAt(filter),
-      endAt(filter + "~")
-    );
-  }
-  return getData(productCollection, constraints, opts);
+  return getData(productCollection, queryByIdConstraints(filter), opts);
+}
+
+export function queryByIdConstraints(filter?: string) {
+  return filter
+    ? [orderBy(documentId()), startAt(filter), endAt(filter + "~")]
+    : [];
 }

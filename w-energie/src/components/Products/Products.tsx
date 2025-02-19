@@ -14,11 +14,12 @@ import ProductImportButton from "./ProductImportButton";
 
 export default function Products() {
   const [id, setId] = useState<string | null>(null);
+  const filter = id?.toUpperCase();
   const [search, setSearch] = useState<string | null>(null);
   const [products, loadingProducts, paginationProps] = usePagination(
-    getProducts,
-    getProductsCount,
-    { filter: id?.toUpperCase() }
+    (opts) => getProducts({ ...opts, filter }),
+    () => getProductsCount(filter),
+    [filter]
   );
   const filteredProducts = useMemo(
     () => getFilteredProducts(products, search),

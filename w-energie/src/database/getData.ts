@@ -16,10 +16,10 @@ export interface GetDataOpts {
   pageSize?: number;
 }
 
-export default async function getData<D, O extends GetDataOpts>(
+export default async function getData<D>(
   collection: CollectionReference<D>,
   constraints: QueryConstraint[],
-  opts: O
+  opts: GetDataOpts
 ): Promise<D[]> {
   const { after, at, pageSize } = opts;
   const queryConstraints: QueryConstraint[] = [...constraints];
