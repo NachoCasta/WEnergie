@@ -174,7 +174,6 @@ function General() {
       <TextField
         name="concept"
         label="Concepto"
-        required
         fullWidth
         defaultValue={initialValues.concept}
       />
