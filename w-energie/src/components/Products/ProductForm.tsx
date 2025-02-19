@@ -7,7 +7,10 @@ import { SubTitle } from "components/Common/Title";
 import { ProductData, ProductType } from "database/products/productCollection";
 import { useState } from "react";
 import SaveIcon from "@mui/icons-material/Save";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { getProductDescription, getProductName } from "utils/productUtils";
+import deleteProduct from "database/products/deleteProduct";
+import { useNavigate, useParams } from "react-router-dom";
 
 export enum ProductFormVariant {
   New,
@@ -22,7 +25,14 @@ type ProductFormProps = {
 
 export default function ProductForm(props: ProductFormProps) {
   const { onSubmit, variant, product } = props;
+  const { productId } = useParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
+  const handleDelete = () => {
+    if (productId == null) return;
+    deleteProduct(productId);
+    navigate("/productos");
+  };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -100,16 +110,38 @@ export default function ProductForm(props: ProductFormProps) {
             }
           />
         </Grid>
-        <Grid item lg={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            loading={loading}
-            loadingPosition="start"
-            startIcon={getSubmitIcon(variant)}
-          >
-            {getSubmitText(variant)}
-          </LoadingButton>
+        <Grid
+          item
+          container
+          spacing={1}
+          lg={12}
+          sx={{ justifyContent: "flex-end" }}
+        >
+          {variant === ProductFormVariant.Edit && (
+            <Grid item>
+              <LoadingButton
+                variant="outlined"
+                color="error"
+                loading={loading}
+                loadingPosition="start"
+                startIcon={<DeleteIcon />}
+                onClick={handleDelete}
+              >
+                Eliminar
+              </LoadingButton>
+            </Grid>
+          )}
+          <Grid item>
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              loading={loading}
+              loadingPosition="start"
+              startIcon={getSubmitIcon(variant)}
+            >
+              {getSubmitText(variant)}
+            </LoadingButton>
+          </Grid>
         </Grid>
       </Grid>
     </Paper>
