@@ -14,7 +14,6 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Title from "components/Common/Title";
-import { useAsync } from "react-use";
 import AddIcon from "@mui/icons-material/Add";
 import getQuotes from "database/quotes/getQuotes";
 import { useNavigate } from "react-router";
@@ -26,57 +25,23 @@ import {
   getTotalPrice,
 } from "utils/quoteUtils";
 import { Quote } from "database/quotes/quoteCollection";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import getQuotesCount from "database/quotes/getQuotesCount";
 import QuoteDownloadButton from "./QuoteDownloadButton";
+import usePagination from "hooks/usePagination";
 
 export default function Quotes() {
   const [search, setSearch] = useState<string | null>(null);
-  const { value: count } = useAsync(getQuotesCount, []);
   const navigate = useNavigate();
   const handleNew = () => navigate("nueva");
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [after, setAfter] = useState<string | null>(null);
-  const [at, setAt] = useState<string | null>(null);
-  const { value: quotes = [], loading } = useAsync(
-    () =>
-      getQuotes({
-        after,
-        at,
-        pageSize: rowsPerPage,
-      }),
-    [after, at, rowsPerPage]
+  const [quotes, loading, paginationProps, rowsPerPage] = usePagination(
+    getQuotes,
+    getQuotesCount
   );
   const filteredQuotes = useMemo(
     () => getFilteredQuotes(quotes, search),
     [quotes, search]
   );
-  const pageCursorsRef = useRef<{ [page: number]: string }>({});
-  useEffect(() => {
-    if (!loading && quotes.length > 0) {
-      const cursorId = quotes[0].id;
-      pageCursorsRef.current[page] = cursorId;
-    }
-  });
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-    if (newPage > page) {
-      setAfter(quotes[quotes.length - 1].id);
-      setAt(null);
-    } else {
-      setAt(pageCursorsRef.current[newPage]);
-      setAfter(null);
-    }
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -130,11 +95,7 @@ export default function Quotes() {
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
-              count={count ?? -1}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
+              {...paginationProps}
             />
           </Grid>
         </Paper>

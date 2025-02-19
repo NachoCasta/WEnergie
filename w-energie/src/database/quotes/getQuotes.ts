@@ -1,17 +1,23 @@
-import { getDocs, query, orderBy, limit, startAfter, getDoc, doc, startAt } from "firebase/firestore";
+import {
+  getDocs,
+  query,
+  orderBy,
+  limit,
+  startAfter,
+  getDoc,
+  doc,
+  startAt,
+} from "firebase/firestore";
 import quoteCollection, { Quote } from "./quoteCollection";
 
 import type { QueryConstraint } from "firebase/firestore";
+import { GetDataOpts } from "hooks/usePagination";
 
-type Opts = {
-  after?: string | null,
-  at?: string | null,
-  pageSize?: number
-}
-
-export default async function getQuotes(opts: Opts): Promise<Array<Quote>> {
+export default async function getQuotes(
+  opts: GetDataOpts
+): Promise<Array<Quote>> {
   const { after, at, pageSize } = opts;
-  const queryConstraints: QueryConstraint[] = [orderBy("date", "desc")]
+  const queryConstraints: QueryConstraint[] = [orderBy("date", "desc")];
   if (after != null) {
     const afterSnap = await getDoc(doc(quoteCollection, after));
     queryConstraints.push(startAfter(afterSnap));
@@ -23,9 +29,7 @@ export default async function getQuotes(opts: Opts): Promise<Array<Quote>> {
   if (pageSize != null) {
     queryConstraints.push(limit(pageSize));
   }
-  const snapshot = await getDocs(
-    query(quoteCollection, ...queryConstraints)
-  );
+  const snapshot = await getDocs(query(quoteCollection, ...queryConstraints));
   try {
     return snapshot.docs.map((doc) => doc.data());
   } catch (err) {
