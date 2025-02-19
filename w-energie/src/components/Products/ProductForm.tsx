@@ -7,6 +7,7 @@ import { SubTitle } from "components/Common/Title";
 import { ProductData, ProductType } from "database/products/productCollection";
 import { useState } from "react";
 import SaveIcon from "@mui/icons-material/Save";
+import { getProductDescription, getProductName } from "utils/productUtils";
 
 export enum ProductFormVariant {
   New,
@@ -27,7 +28,9 @@ export default function ProductForm(props: ProductFormProps) {
     const data = new FormData(event.currentTarget);
     const productData = {
       name: data.get("name") as string,
+      nameGerman: "",
       description: data.get("description") as string,
+      descriptionGerman: "",
       price: Number.parseFloat(data.get("price") as string),
       weight: Number.parseFloat(data.get("weight") as string),
       type: product?.type ?? ProductType.Custom,
@@ -52,7 +55,7 @@ export default function ProductForm(props: ProductFormProps) {
             label="Nombre"
             required
             fullWidth
-            defaultValue={product?.name}
+            defaultValue={product != null ? getProductName(product) : null}
           />
         </Grid>
         <Grid item lg={3}>
@@ -92,7 +95,9 @@ export default function ProductForm(props: ProductFormProps) {
             fullWidth
             multiline
             minRows={4}
-            defaultValue={product?.description}
+            defaultValue={
+              product != null ? getProductDescription(product) : null
+            }
           />
         </Grid>
         <Grid item lg={12} sx={{ display: "flex", justifyContent: "flex-end" }}>

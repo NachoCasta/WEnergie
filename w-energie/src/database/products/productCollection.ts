@@ -13,8 +13,12 @@ export enum ProductType {
 }
 
 export interface ProductData {
-  name: string;
-  description: string;
+  name?: string;
+  nameEnglish?: string;
+  nameGerman: string;
+  description?: string;
+  descriptionEnglish?: string;
+  descriptionGerman: string;
   price: number;
   weight: number;
   type: ProductType;

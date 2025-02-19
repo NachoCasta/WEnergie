@@ -41,9 +41,12 @@ function parseProduct(product: RawProduct | RawPart): Product {
   return {
     id,
     price: product.Netto,
-    name: product["Name ES"] || product["Name EN"] || product["Name DE"],
-    description:
-      product["Text ES"] || product["Text EN"] || product["Text DE"] || "",
+    name: product["Name ES"] || undefined,
+    nameEnglish: product["Name EN"] || undefined,
+    nameGerman: product["Name DE"],
+    description: product["Text ES"] || undefined,
+    descriptionEnglish: product["Text EN"] || undefined,
+    descriptionGerman: product["Text DE"] || "",
     weight,
     type,
   };

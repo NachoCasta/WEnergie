@@ -18,6 +18,7 @@ import {
   getTotalPrice,
   getTotalTax,
 } from "utils/quoteUtils";
+import { getProductDescription, getProductName } from "utils/productUtils";
 
 const GREEN = "#3b5430";
 const YELLOW = "#f9b129";
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     width: "10%",
     padding: "20px 10px",
     backgroundColor: GREEN,
-    color: "white"
+    color: "white",
   },
   tableCellDescription: {
     width: "50%",
@@ -196,7 +197,13 @@ type TableProps = {
 function Table({ quote }: TableProps) {
   const { products, euroToClp, discount } = quote;
   const rows = [
-    ...products,
+    ...products.map((p) => ({
+      id: p.id,
+      name: getProductName(p),
+      description: getProductDescription(p),
+      quantity: p.quantity,
+      price: p.price,
+    })),
     {
       id: null,
       name: "Transporte e internación",

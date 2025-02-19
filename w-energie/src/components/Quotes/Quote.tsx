@@ -30,6 +30,7 @@ import {
 import { formatClp, formatEuro } from "utils/formatCurrency";
 import useQuotePdf from "hooks/useQuotePdf";
 import deleteQuote from "database/quotes/deleteQuote";
+import { getProductName } from "utils/productUtils";
 
 export default function QuoteView() {
   const [quote] = useQuoteFromParams();
@@ -170,8 +171,18 @@ function Products({ quote }: ProductsProps) {
   if (!quote) return null;
   const { products, discount, euroToClp } = quote;
   const rows = [
-    ...products,
-    { id: null, name: "Transporte", quantity: 1, price: quote.deliveryCost },
+    ...products.map((p) => ({
+      id: p.id,
+      name: getProductName(p),
+      quantity: p.quantity,
+      price: p.price,
+    })),
+    {
+      id: null,
+      name: "Transporte",
+      quantity: 1,
+      price: quote.deliveryCost,
+    },
     {
       id: null,
       name: "Instalación",

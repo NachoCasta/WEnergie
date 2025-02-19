@@ -13,7 +13,7 @@ export default async function addProducts(
       chunk.forEach((product) => {
         const { id, ...data } = product;
         const ref = doc(productCollection, id);
-        batch.set(ref, data);
+        batch.set(ref, data, {merge: true});
       });
       await batch.commit();
     })

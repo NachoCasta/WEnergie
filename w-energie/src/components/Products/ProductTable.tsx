@@ -10,6 +10,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { QuoteProduct } from "database/quotes/quoteCollection";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Input from "@mui/material/Input";
+import { getProductName } from "utils/productUtils";
 
 type ProductsTableProps<P> = {
   products: Array<P>;
@@ -94,7 +95,7 @@ export default function ProductTable<P extends Product>(
                 return (
                   <TableRow key={`${product.id}-${index}`}>
                     <TableCell>{product.id}</TableCell>
-                    <TableCell>{product.name}</TableCell>
+                    <TableCell>{getProductName(product)}</TableCell>
                     <TableCell>{product.weight}</TableCell>
                     {quantityCellContent != null && (
                       <TableCell>{quantityCellContent}</TableCell>

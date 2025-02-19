@@ -1,5 +1,6 @@
 import { Quote } from "database/quotes/quoteCollection";
 import _ from "lodash";
+import { getProductName } from "./productUtils";
 
 export function getSubtotalPrice(
   quote: Quote,
@@ -34,5 +35,5 @@ export function getTotalPrice(quote: Quote): number {
 export function getMainProductName(quote: Quote): string {
   const mainProduct = _.maxBy(quote.products, (p) => p.price * p.quantity);
   if (!mainProduct) return "";
-  return mainProduct.name;
+  return getProductName(mainProduct);
 }
