@@ -4,6 +4,7 @@ import {
   Skeleton,
   TableContainer,
   TablePagination,
+  TextField,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -19,14 +20,19 @@ import getQuotes from "database/quotes/getQuotes";
 import { useNavigate } from "react-router";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { formatClp } from "utils/formatCurrency";
-import { getMainProductName, getTotalPrice } from "utils/quoteUtils";
+import {
+  getFilteredQuotes,
+  getMainProductName,
+  getTotalPrice,
+} from "utils/quoteUtils";
 import { Quote } from "database/quotes/quoteCollection";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import useQuotePdf from "hooks/useQuotePdf";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import getQuotesCount from "database/quotes/getQuotesCount";
 
 export default function Quotes() {
+  const [search, setSearch] = useState<string | null>(null);
   const { value: count } = useAsync(getQuotesCount, []);
   const navigate = useNavigate();
   const handleNew = () => navigate("nueva");
@@ -42,6 +48,10 @@ export default function Quotes() {
         pageSize: rowsPerPage,
       }),
     [after, at, rowsPerPage]
+  );
+  const filteredQuotes = useMemo(
+    () => getFilteredQuotes(quotes, search),
+    [quotes, search]
   );
   const pageCursorsRef = useRef<{ [page: number]: string }>({});
   useEffect(() => {
@@ -71,49 +81,64 @@ export default function Quotes() {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
-        <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-          <Title>Cotizaciones</Title>
-          <Grid item sx={{ alignSelf: "flex-end", pb: 1 }}>
-            <Button
-              color="primary"
-              variant="contained"
-              sx={{ mr: 1 }}
-              onClick={handleNew}
-            >
-              <AddIcon /> Agregar
-            </Button>
+        <Paper sx={{ p: 2 }}>
+          <Grid container direction="column">
+            <Title>Cotizaciones</Title>
+            <Grid container spacing={1} sx={{ pb: 1, alignItems: "center" }}>
+              <Grid item sx={{ flexGrow: "1" }}>
+                <TextField
+                  size="small"
+                  fullWidth
+                  label="Buscar"
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid item>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={handleNew}
+                  size="medium"
+                >
+                  <AddIcon /> Agregar
+                </Button>
+              </Grid>
+            </Grid>
+            <TableContainer>
+              <Table stickyHeader size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>#</TableCell>
+                    <TableCell>Cliente</TableCell>
+                    <TableCell>Producto</TableCell>
+                    <TableCell align="right">Precio Total</TableCell>
+                    <TableCell align="center">Acciones</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {loading ? (
+                    <RowSkeleton count={rowsPerPage} />
+                  ) : (
+                    filteredQuotes.map((quote) => (
+                      <QuoteRow key={quote.id} quote={quote} />
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={count ?? -1}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </Grid>
-          <TableContainer>
-            <Table stickyHeader size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>#</TableCell>
-                  <TableCell>Cliente</TableCell>
-                  <TableCell>Producto</TableCell>
-                  <TableCell align="right">Precio Total</TableCell>
-                  <TableCell align="center">Acciones</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {loading ? (
-                  <RowSkeleton count={rowsPerPage} />
-                ) : (
-                  quotes.map((quote) => (
-                    <QuoteRow key={quote.id} quote={quote} />
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            component="div"
-            count={count ?? -1}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
         </Paper>
       </Grid>
     </Grid>

@@ -37,3 +37,10 @@ export function getMainProductName(quote: Quote): string {
   if (!mainProduct) return "";
   return getProductName(mainProduct);
 }
+
+export function getFilteredQuotes(quotes: Quote[], filter: string | null):  Quote[] {
+  if (!filter) {
+    return quotes
+  }
+  return quotes.filter((quote) => quote.client.name.toLowerCase().includes(filter.toLowerCase()))
+}
