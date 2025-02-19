@@ -194,9 +194,17 @@ type TableProps = {
   quote: QuoteType;
 };
 
+type RowData = {
+  id: string | null;
+  name: string;
+  description: string | null;
+  quantity: number;
+  price: number;
+};
+
 function Table({ quote }: TableProps) {
   const { products, euroToClp, discount } = quote;
-  const rows = [
+  const rows: RowData[] = [
     ...products.map((p) => ({
       id: p.id,
       name: getProductName(p),
@@ -204,21 +212,25 @@ function Table({ quote }: TableProps) {
       quantity: p.quantity,
       price: p.price,
     })),
-    {
+  ];
+  if (quote.deliveryCost !== 0) {
+    rows.push({
       id: null,
       name: "Transporte e internación",
       description: null,
       quantity: 1,
       price: quote.deliveryCost,
-    },
-    {
+    });
+  }
+  if (quote.installationCost !== 0) {
+    rows.push({
       id: null,
       name: "Montaje, puesta en marcha y garantía",
       description: null,
       quantity: 1,
       price: quote.installationCost,
-    },
-  ];
+    });
+  }
   const subtotalPreDiscount = getSubtotalPrice(quote, false);
   const totalDiscount = getTotalDiscount(quote);
   const subtotal = getSubtotalPrice(quote);
