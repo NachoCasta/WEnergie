@@ -15,6 +15,7 @@ import { QuoteProduct } from "database/quotes/quoteCollection";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Input from "@mui/material/Input";
 import { getProductName } from "utils/productUtils";
+import { formatEuro } from "utils/formatCurrency";
 
 type ProductsTableProps<P> = {
   products: Array<P>;
@@ -93,7 +94,7 @@ export default function ProductTable<P extends Product>(
                   {quantityCellContent != null && (
                     <TableCell>{quantityCellContent}</TableCell>
                   )}
-                  <TableCell>{`$${product.price}`}</TableCell>
+                  <TableCell>{formatEuro(product.price)}</TableCell>
                   <TableCell align="center">
                     {onRemove && (
                       <IconButton onClick={() => onRemove(product.id)}>
