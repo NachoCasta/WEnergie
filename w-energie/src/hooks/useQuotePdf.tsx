@@ -28,5 +28,10 @@ function getPdfName(quote: Quote): string {
   const month = new Intl.DateTimeFormat("en-US", { month: "2-digit" }).format(
     quote.date.toDate()
   );
-  return `${quote.id}-${month} PRESUPUESTO ${quote.client.name}`;
+  const elements = [`${quote.id}-${month}`, "PRESUPUESTO"];
+  if (quote.concept != null) {
+    elements.push(quote.concept);
+  }
+  elements.push(quote.client.name);
+  return elements.join(" ");
 }

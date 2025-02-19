@@ -17,6 +17,7 @@ import TableRow from "@mui/material/TableRow";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 import CopyAllIcon from "@mui/icons-material/CopyAll";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -62,6 +63,7 @@ function Info({ quote }: InfoProps) {
       text: quote.date.toDate().toLocaleDateString("es-CL"),
       icon: <CalendarTodayIcon />,
     },
+    { text: quote.concept, icon: <AssignmentIcon /> },
     { text: client.name, icon: <PersonIcon /> },
     { text: client.rut, icon: <AccountBoxIcon /> },
     { text: client.phone, icon: <PhoneIcon /> },
@@ -100,6 +102,7 @@ function Actions({ quote }: ActionsProps) {
   const handleTemplate = () => {
     const { client } = quote;
     const params = new URLSearchParams({
+      concept: quote.concept ?? "",
       name: client.name,
       rut: client.rut,
       phone: client.phone,

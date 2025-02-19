@@ -13,6 +13,7 @@ export interface QuoteProduct extends Product {
 }
 
 export interface QuoteData {
+  concept?: string;
   client: {
     name: string;
     rut: string;

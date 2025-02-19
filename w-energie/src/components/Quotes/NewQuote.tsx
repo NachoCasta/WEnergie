@@ -72,6 +72,7 @@ export default function NewQuote() {
       mail: data.get("mail") as string,
     };
     const quote = {
+      concept: data.get("concept") as string,
       client,
       products,
       date: Timestamp.now(),
@@ -100,6 +101,7 @@ export default function NewQuote() {
         >
           <Grid container spacing={2}>
             <FormHeader />
+            <General />
             <Client />
             <Products
               products={products}
@@ -149,6 +151,21 @@ function FormHeader() {
         />
       </Grid>
     </>
+  );
+}
+
+function General() {
+  const initialValues = useInitialValues();
+  return (
+    <Grid item lg={12}>
+      <TextField
+        name="concept"
+        label="Concepto"
+        required
+        fullWidth
+        defaultValue={initialValues.concept}
+      />
+    </Grid>
   );
 }
 
@@ -441,6 +458,7 @@ function Others() {
 }
 
 type Values = {
+  concept: string | null;
   name: string | null;
   rut: string | null;
   phone: string | null;
@@ -467,6 +485,7 @@ function useInitialValues(): Values {
     );
   }
   const values = {
+    concept: params.get("concept"),
     name: params.get("name"),
     rut: params.get("rut"),
     phone: params.get("phone"),

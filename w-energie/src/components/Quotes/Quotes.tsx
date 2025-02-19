@@ -111,7 +111,7 @@ export default function Quotes() {
                   <TableRow>
                     <TableCell>#</TableCell>
                     <TableCell>Cliente</TableCell>
-                    <TableCell>Producto</TableCell>
+                    <TableCell>Concepto</TableCell>
                     <TableCell align="right">Precio Total</TableCell>
                     <TableCell align="center">Acciones</TableCell>
                   </TableRow>
@@ -153,7 +153,7 @@ function QuoteRow({ quote }: QuoteRowProps) {
     <TableRow>
       <TableCell>{quote.id}</TableCell>
       <TableCell>{quote.client.name}</TableCell>
-      <TableCell>{getMainProductName(quote)}</TableCell>
+      <TableCell>{quote.concept ?? getMainProductName(quote)}</TableCell>
       <TableCell align="right">
         {formatClp(getTotalPrice(quote) * quote.euroToClp)}
       </TableCell>
