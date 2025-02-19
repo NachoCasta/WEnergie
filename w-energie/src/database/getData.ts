@@ -10,16 +10,16 @@ import {
 
 import type { CollectionReference, QueryConstraint } from "firebase/firestore";
 
-export type GetDataOpts = {
+export interface GetDataOpts {
   after?: string | null;
   at?: string | null;
   pageSize?: number;
-};
+}
 
-export default async function getData<D>(
+export default async function getData<D, O extends GetDataOpts>(
   collection: CollectionReference<D>,
   constraints: QueryConstraint[],
-  opts: GetDataOpts
+  opts: O
 ): Promise<D[]> {
   const { after, at, pageSize } = opts;
   const queryConstraints: QueryConstraint[] = [...constraints];
