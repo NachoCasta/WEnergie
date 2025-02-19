@@ -8,7 +8,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Title, { SubTitle } from "components/Common/Title";
 import ProductTable from "components/Products/ProductTable";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import getProduct from "database/products/getProduct";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -18,7 +18,7 @@ import { useNavigate } from "react-router";
 import { QuoteProduct } from "database/quotes/quoteCollection";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Timestamp } from "firebase/firestore";
-import { useLocation } from "react-use";
+import { useLatest, useLocation } from "react-use";
 import _ from "lodash";
 import { Product } from "database/products/productCollection";
 
@@ -26,6 +26,7 @@ export default function NewQuote() {
   const [products, setProducts] = useState<Array<QuoteProduct>>([]);
   const initialValues = useInitialValues();
   const initialProducts = initialValues.products;
+  const productsAutoChangedRef = useRef(false);
   useEffect(() => {
     if (initialProducts != null) {
       Promise.all(
@@ -33,7 +34,10 @@ export default function NewQuote() {
           ...(await getProduct(p.id)),
           quantity: p.quantity,
         }))
-      ).then((products) => setProducts(products));
+      ).then((products) => {
+        setProducts(products);
+        productsAutoChangedRef.current = true;
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialProducts?.toString()]);
@@ -115,7 +119,10 @@ export default function NewQuote() {
               onRemove={handleRemove}
               onQuantityChange={handleQuantityChange}
             />
-            <Delivery products={products} />
+            <Delivery
+              products={products}
+              productsAutoChangedRef={productsAutoChangedRef}
+            />
             <Others />
             <Grid
               item
@@ -328,27 +335,90 @@ function Products({
 
 type DeliveryProps = {
   products: Array<QuoteProduct>;
+  productsAutoChangedRef: React.MutableRefObject<boolean>;
 };
 
-function Delivery({ products }: DeliveryProps) {
+function Delivery({ products, productsAutoChangedRef }: DeliveryProps) {
   const initialValues = useInitialValues();
   const [weight, handleWeightChange, setWeight] = useInput(
     initialValues.weight ?? "0"
   );
-  const [deliveryCostPerKg, handleDeliveryCostPerKgChange] = useInput("19");
+  const [
+    deliveryCostPerKg,
+    handleDeliveryCostPerKgChange,
+    setDeliveryCostPerKg,
+  ] = useInput(() => {
+    if (initialValues.weight != null && initialValues.deliveryCost != null) {
+      return String(
+        Number.parseFloat(initialValues.deliveryCost) /
+          Number.parseFloat(initialValues.weight)
+      );
+    }
+    return "24";
+  });
   const [deliveryCost, handleDeliveryCostChange, setDeliveryCost] = useInput(
     initialValues.deliveryCost ?? "0"
   );
+
+  const deliveryCostAutoChangedRef = useRef(false);
+  const deliveryCostPerKgAutoChangedRef = useRef(false);
+
+  // If products change, recalculate the total weight
   useEffect(() => {
+    const initialProducts = initialValues.products;
+    if (
+      initialProducts != null &&
+      initialProducts.length > 0 &&
+      products.length === 0
+    ) {
+      return;
+    }
+    if (productsAutoChangedRef.current) {
+      productsAutoChangedRef.current = false;
+      return;
+    }
     const totalWeight = products.reduce(
       (total, p) => total + (p?.weight ?? 0) * p.quantity,
       0
     );
     setWeight(String(totalWeight));
-    setDeliveryCost((value: string) =>
-      String(totalWeight * Number.parseFloat(value || "19"))
+  }, [initialValues.products, products, productsAutoChangedRef, setWeight]);
+
+  // If weight or deliveryCostPerKg change, recalculate the total delivery cost
+  useEffect(() => {
+    if (deliveryCostPerKgAutoChangedRef.current) {
+      deliveryCostPerKgAutoChangedRef.current = false;
+      return;
+    }
+    setDeliveryCost(
+      String(
+        _.round(
+          Number.parseFloat(weight) * Number.parseFloat(deliveryCostPerKg),
+          3
+        )
+      )
     );
-  }, [products, setWeight, setDeliveryCost]);
+    deliveryCostAutoChangedRef.current = true;
+  }, [setDeliveryCost, weight, deliveryCostPerKg]);
+
+  // If deliveryCost changes, recalculate the deliveryCostPerKg
+  const latestWeight = useLatest(weight);
+  useEffect(() => {
+    if (deliveryCostAutoChangedRef.current) {
+      deliveryCostAutoChangedRef.current = false;
+      return;
+    }
+    setDeliveryCostPerKg(
+      String(
+        _.round(
+          Number.parseFloat(deliveryCost) /
+            Number.parseFloat(latestWeight.current),
+          2
+        )
+      )
+    );
+    deliveryCostPerKgAutoChangedRef.current = true;
+  }, [setDeliveryCostPerKg, deliveryCost, latestWeight]);
   return (
     <Grid item lg={6}>
       <Grid container spacing={2}>
@@ -367,7 +437,7 @@ function Delivery({ products }: DeliveryProps) {
             InputProps={{
               endAdornment: <InputAdornment position="end">Kg</InputAdornment>,
             }}
-            inputProps={{ min: 0, step: 0.001 }}
+            inputProps={{ min: 0 }}
           />
         </Grid>
         <Grid item lg={4}>
@@ -398,7 +468,7 @@ function Delivery({ products }: DeliveryProps) {
                 <InputAdornment position="start">€</InputAdornment>
               ),
             }}
-            inputProps={{ min: 0, step: 0.001 }}
+            inputProps={{ min: 0 }}
             value={deliveryCost}
             onChange={handleDeliveryCostChange}
           />
@@ -487,12 +557,14 @@ function useInitialValues(): Values {
   const { search } = useLocation();
   const params = useMemo(() => new URLSearchParams(search), [search]);
   const productIds = params.get("products");
-  let products = null;
-  if (productIds != null) {
-    products = Object.entries(_.countBy(productIds.split(","))).map(
+  const products = useMemo(() => {
+    if (productIds == null) {
+      return null;
+    }
+    return Object.entries(_.countBy(productIds.split(","))).map(
       ([id, quantity]) => ({ id, quantity })
     );
-  }
+  }, [productIds]);
   const values = {
     concept: params.get("concept"),
     name: params.get("name"),
