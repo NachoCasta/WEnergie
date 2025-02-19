@@ -1,6 +1,7 @@
 import { doc, updateDoc } from "firebase/firestore";
 import productCollection, { Product } from "./productCollection";
 
-export default async function addProduct(product: Product): Promise<void> {
-  await updateDoc(doc(productCollection, product.id), product);
+export default async function updateProduct(product: Product): Promise<void> {
+  const { id, ...productData } = product;
+  await updateDoc(doc(productCollection, product.id), productData);
 }
