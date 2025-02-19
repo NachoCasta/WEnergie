@@ -25,5 +25,8 @@ export default function useQuotePdf(quote?: Quote): [() => void, boolean] {
 }
 
 function getPdfName(quote: Quote): string {
-  return `Cotización ${quote.id} ${quote.client.name}`;
+  const month = new Intl.DateTimeFormat("en-US", { month: "2-digit" }).format(
+    quote.date.toDate()
+  );
+  return `${quote.id}-${month} PRESUPUESTO ${quote.client.name}`;
 }
