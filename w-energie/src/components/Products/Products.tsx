@@ -4,16 +4,13 @@ import Paper from "@mui/material/Paper";
 import Title from "components/Common/Title";
 import getProducts from "database/products/getProducts";
 import AddIcon from "@mui/icons-material/Add";
-import UploadIcon from "@mui/icons-material/Upload";
-import parseProducts from "utils/parseProducts";
-import addProducts from "database/products/addProducts";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { useMemo, useState } from "react";
 import ProductTable from "./ProductTable";
 import { useNavigate } from "react-router-dom";
 import usePagination from "hooks/usePagination";
 import getProductsCount from "database/products/getProductsCount";
 import { getFilteredProducts } from "utils/productUtils";
+import ProductImportButton from "./ProductImportButton";
 
 export default function Products() {
   const [id, setId] = useState<string | null>(null);
@@ -29,14 +26,6 @@ export default function Products() {
   );
   const navigate = useNavigate();
   const handleAdd = () => navigate("nuevo");
-  const [loading, setLoading] = useState(false);
-  const handleImport = async (e: any) => {
-    const file = e.target.files[0];
-    setLoading(true);
-    const products = await parseProducts(file);
-    await addProducts(products);
-    setLoading(false);
-  };
   const handleView = (productId: string) => {
     navigate(productId);
   };
@@ -84,23 +73,7 @@ export default function Products() {
               </Button>
             </Grid>
             <Grid item sx={{ justifySelf: "right" }}>
-              <LoadingButton
-                color="secondary"
-                variant="contained"
-                component="label"
-                loading={loading}
-                loadingPosition="start"
-                startIcon={<UploadIcon />}
-              >
-                Importar
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => {
-                    handleImport(e);
-                  }}
-                />
-              </LoadingButton>
+              <ProductImportButton />
             </Grid>
           </Grid>
           <ProductTable

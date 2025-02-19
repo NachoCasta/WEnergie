@@ -18,9 +18,9 @@ export interface ProductData {
   nameGerman: string;
   description?: string;
   descriptionEnglish?: string;
-  descriptionGerman: string;
+  descriptionGerman?: string;
   price: number;
-  weight: number;
+  weight?: number;
   type: ProductType;
 }
 

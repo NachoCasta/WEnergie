@@ -8,7 +8,8 @@ export function getProductDescription(product: ProductData): string {
   return (
     product.description ||
     product.descriptionEnglish ||
-    product.descriptionGerman
+    product.descriptionGerman ||
+    ""
   );
 }
 
