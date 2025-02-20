@@ -18,5 +18,5 @@ jobs:
           entryPoint: "./w-energie"
       - name: Deploy Firestore Rules
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_W_ENERGIE }}
         run: firebase deploy --only firestore:rules --project w-energie
