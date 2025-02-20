@@ -9,13 +9,14 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
-      - name: Go To Project Root
-        run: cd w-energie
       - name: Install Dependencies
+        working-directory: ./w-energie
         run: yarn
       - name: Build
+        working-directory: ./w-energie
         run: yarn build
       - name: Archive Production Artifact
+        working-directory: ./w-energie
         uses: actions/upload-artifact@master
         with:
           name: dist
@@ -28,14 +29,14 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
-      - name: Go To Project Root
-        run: cd w-energie
       - name: Download Artifact
+        working-directory: ./w-energie
         uses: actions/download-artifact@master
         with:
           name: dist
           path: dist
       - name: Deploy to Firebase
+        working-directory: ./w-energie
         uses: w9jds/firebase-action@master
         with:
           args: deploy
