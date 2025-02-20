@@ -10,7 +10,7 @@ export default function Authed(props: Props) {
   const { children, fallback } = props;
   const [user, loading, error] = useAuth();
   if (user == null || loading || error) {
-    return <>{fallback?.(true, error) ?? null}</>;
+    return <>{fallback?.(loading, error) ?? null}</>;
   }
   return <>{children}</>;
 }

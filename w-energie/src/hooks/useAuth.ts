@@ -11,7 +11,6 @@ export function useSession(): Session | null {
   if (user == null) {
     return null;
   }
-  console.log(user.photoURL);
   return {
     user: {
       id: user.uid,
