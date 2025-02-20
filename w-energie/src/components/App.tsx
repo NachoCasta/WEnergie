@@ -36,8 +36,8 @@ const router = createBrowserRouter(
           <Route path=":productId" element={<Product />} />
         </Route>
       </Route>
-    </>
-  )
+    </>,
+  ),
 );
 
 function App() {

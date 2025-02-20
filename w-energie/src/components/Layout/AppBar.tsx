@@ -4,9 +4,8 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
-import Badge from "@mui/material/Badge";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import { DRAWER_WIDTH } from "./LayoutConsts";
+import { Account } from "@toolpad/core";
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -61,11 +60,7 @@ export default function AppBar({ open, onOpen }: PropsType) {
         >
           WEnergie
         </Typography>
-        <IconButton color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
+        <Account />
       </Toolbar>
     </StyledAppBar>
   );
