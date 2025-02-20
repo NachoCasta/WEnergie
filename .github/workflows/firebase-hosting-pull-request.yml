@@ -1,12 +1,10 @@
 name: Build and Deploy
-on:
-  push:
-    branches:
-      - master
+on: pull_request
 
 jobs:
   build:
     name: Build
+    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -24,6 +22,7 @@ jobs:
           path: dist
   deploy:
     name: Deploy
+    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     needs: build
     runs-on: ubuntu-latest
     steps:
