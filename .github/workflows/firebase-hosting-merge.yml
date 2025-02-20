@@ -39,5 +39,5 @@ jobs:
         with:
           args: deploy
         env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_W_ENERGIE }}
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           PROJECT_PATH: ./w-energie
