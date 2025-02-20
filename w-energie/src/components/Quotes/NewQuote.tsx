@@ -33,7 +33,7 @@ export default function NewQuote() {
         initialProducts.map(async (p) => ({
           ...(await getProduct(p.id)),
           quantity: p.quantity,
-        }))
+        })),
       ).then((products) => {
         setProducts(products);
         productsAutoChangedRef.current = true;
@@ -46,8 +46,8 @@ export default function NewQuote() {
       // If the product is already on the table, just increase the quantity
       setProducts(
         products.map((p) =>
-          p.id === productId ? { ...p, quantity: p.quantity + 1 } : p
-        )
+          p.id === productId ? { ...p, quantity: p.quantity + 1 } : p,
+        ),
       );
     } else {
       // If it's not, get it from the DB and add it to the table
@@ -59,14 +59,14 @@ export default function NewQuote() {
     setProducts(
       products
         .map((p) =>
-          p.id === productId ? { ...p, quantity: p.quantity - 1 } : p
+          p.id === productId ? { ...p, quantity: p.quantity - 1 } : p,
         )
-        .filter((p) => p.quantity > 0)
+        .filter((p) => p.quantity > 0),
     );
   };
   const handleQuantityChange = (productId: string, quantity: number) => {
     setProducts(
-      products.map((p) => (p.id === productId ? { ...p, quantity } : p))
+      products.map((p) => (p.id === productId ? { ...p, quantity } : p)),
     );
   };
   const navigate = useNavigate();
@@ -90,7 +90,7 @@ export default function NewQuote() {
       paymentForm: data.get("paymentForm") as string,
       deliveryCost: Number.parseFloat(data.get("deliveryCost") as string),
       installationCost: Number.parseFloat(
-        data.get("installationCost") as string
+        data.get("installationCost") as string,
       ),
       weight: Number.parseFloat(data.get("weight") as string),
       euroToClp: Number.parseInt(data.get("euroToClp") as string),
@@ -340,7 +340,7 @@ type DeliveryProps = {
 function Delivery({ products, productsAutoChangedRef }: DeliveryProps) {
   const initialValues = useInitialValues();
   const [weight, handleWeightChange, setWeight] = useInput(
-    initialValues.weight ?? "0"
+    initialValues.weight ?? "0",
   );
   const [
     deliveryCostPerKg,
@@ -350,13 +350,13 @@ function Delivery({ products, productsAutoChangedRef }: DeliveryProps) {
     if (initialValues.weight != null && initialValues.deliveryCost != null) {
       return String(
         Number.parseFloat(initialValues.deliveryCost) /
-          Number.parseFloat(initialValues.weight)
+          Number.parseFloat(initialValues.weight),
       );
     }
     return "24";
   });
   const [deliveryCost, handleDeliveryCostChange, setDeliveryCost] = useInput(
-    initialValues.deliveryCost ?? "0"
+    initialValues.deliveryCost ?? "0",
   );
 
   const deliveryCostAutoChangedRef = useRef(false);
@@ -378,7 +378,7 @@ function Delivery({ products, productsAutoChangedRef }: DeliveryProps) {
     }
     const totalWeight = products.reduce(
       (total, p) => total + (p?.weight ?? 0) * p.quantity,
-      0
+      0,
     );
     setWeight(String(totalWeight));
   }, [initialValues.products, products, productsAutoChangedRef, setWeight]);
@@ -393,9 +393,9 @@ function Delivery({ products, productsAutoChangedRef }: DeliveryProps) {
       String(
         _.round(
           Number.parseFloat(weight) * Number.parseFloat(deliveryCostPerKg),
-          3
-        )
-      )
+          2,
+        ),
+      ),
     );
     deliveryCostAutoChangedRef.current = true;
   }, [setDeliveryCost, weight, deliveryCostPerKg]);
@@ -412,9 +412,9 @@ function Delivery({ products, productsAutoChangedRef }: DeliveryProps) {
         _.round(
           Number.parseFloat(deliveryCost) /
             Number.parseFloat(latestWeight.current),
-          2
-        )
-      )
+          2,
+        ),
+      ),
     );
     deliveryCostPerKgAutoChangedRef.current = true;
   }, [setDeliveryCostPerKg, deliveryCost, latestWeight]);
@@ -436,7 +436,7 @@ function Delivery({ products, productsAutoChangedRef }: DeliveryProps) {
             InputProps={{
               endAdornment: <InputAdornment position="end">Kg</InputAdornment>,
             }}
-            inputProps={{ min: 0 }}
+            inputProps={{ min: 0, step: 0.01 }}
           />
         </Grid>
         <Grid item lg={4}>
@@ -450,7 +450,7 @@ function Delivery({ products, productsAutoChangedRef }: DeliveryProps) {
                 <InputAdornment position="start">€</InputAdornment>
               ),
             }}
-            inputProps={{ min: 0 }}
+            inputProps={{ min: 0, step: 0.01 }}
             value={deliveryCostPerKg}
             onChange={handleDeliveryCostPerKgChange}
           />
@@ -467,7 +467,7 @@ function Delivery({ products, productsAutoChangedRef }: DeliveryProps) {
                 <InputAdornment position="start">€</InputAdornment>
               ),
             }}
-            inputProps={{ min: 0 }}
+            inputProps={{ min: 0, step: 0.01 }}
             value={deliveryCost}
             onChange={handleDeliveryCostChange}
           />
@@ -561,7 +561,7 @@ function useInitialValues(): Values {
       return null;
     }
     return Object.entries(_.countBy(productIds.split(","))).map(
-      ([id, quantity]) => ({ id, quantity })
+      ([id, quantity]) => ({ id, quantity }),
     );
   }, [productIds]);
   const values = {
@@ -592,14 +592,14 @@ function usePagination(products: Product[]): [Product[], TablePaginationProps] {
   };
 
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
   const currentPageProducts = products.slice(
     page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+    page * rowsPerPage + rowsPerPage,
   );
   const paginationProps = {
     count: products.length,
