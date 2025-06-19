@@ -19,7 +19,6 @@ export const signInWithGoogle = async () => {
   try {
     return setPersistence(auth, browserSessionPersistence).then(async () => {
       const result = await signInWithPopup(auth, googleProvider);
-      console.log("signed in with google", result);
       return {
         success: true,
         user: result.user,
