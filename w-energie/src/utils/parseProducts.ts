@@ -127,7 +127,7 @@ export default async function parseProducts(
   if (!productPraser.pricesFound) {
     throw new Error("No prices found in the file");
   }
-  if (type == ProductType.Product && !productPraser.descriptionsFound) {
+  if (type === ProductType.Product && !productPraser.descriptionsFound) {
     throw new Error("No descriptions found in the file");
   }
 
