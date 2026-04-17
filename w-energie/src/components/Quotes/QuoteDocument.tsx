@@ -372,8 +372,8 @@ function Footer() {
       <Text>Datos de transferencia:</Text>
       <Text>W Energie SpA:</Text>
       <Text>Rut: 76.610.987-K</Text>
-      <Text>Chequera electrónica Banco Estado</Text>
-      <Text>N° 33470365418</Text>
+      <Text>Cuenta Corriente BCI</Text>
+      <Text>N° 79838450</Text>
       <Text style={styles.mail}>sonia.worner@wenergie.cl</Text>
     </View>
   );
