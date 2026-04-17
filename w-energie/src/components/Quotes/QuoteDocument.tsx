@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     direction: "row",
     alignItems: "flex-end",
     paddingTop: 40,
-    fontSize: 11,
+    fontSize: 12,
   },
   tableRow: { display: "flex", flexDirection: "row", marginBottom: 1 },
   tableCell: {
