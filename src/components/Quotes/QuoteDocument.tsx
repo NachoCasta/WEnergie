@@ -18,7 +18,7 @@ import {
   getTotalPrice,
   getTotalTax,
 } from "utils/quoteUtils";
-import styles, { GREEN, YELLOW } from "./quoteDocumentStyles";
+import styles, { GREEN } from "./quoteDocumentStyles";
 
 type QuoteDocumentProps = {
   quote?: QuoteType;
