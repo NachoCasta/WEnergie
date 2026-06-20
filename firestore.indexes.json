@@ -1,10 +1,4 @@
 {
-  "indexes": [
-    {
-      "collectionGroup": "products",
-      "queryScope": "COLLECTION",
-      "fields": []
-    }
-  ],
+  "indexes": [],
   "fieldOverrides": []
 }
