@@ -12,16 +12,14 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: Install Dependencies
-        working-directory: ./w-energie
         run: yarn
       - name: Build
-        working-directory: ./w-energie
         run: yarn build
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
           name: build
-          path: w-energie/build
+          path: build
   deploy:
     name: Deploy
     needs: build
@@ -33,11 +31,10 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: build
-          path: w-energie/build
+          path: build
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
           args: deploy
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          PROJECT_PATH: ./w-energie
