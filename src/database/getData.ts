@@ -35,10 +35,5 @@ export default async function getData<D>(
     queryConstraints.push(limit(pageSize));
   }
   const snapshot = await getDocs(query(collection, ...queryConstraints));
-  try {
-    return snapshot.docs.map((doc) => doc.data());
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
+  return snapshot.docs.map((doc) => doc.data());
 }

@@ -5,7 +5,9 @@ import {
   orderBy,
   limit,
   getDocs,
+  runTransaction,
 } from "firebase/firestore";
+import { db } from "database";
 import quoteCollection, { QuoteData } from "./quoteCollection";
 
 export default async function addQuote(quote: QuoteData): Promise<string> {
@@ -26,6 +28,15 @@ export default async function addQuote(quote: QuoteData): Promise<string> {
   const quoteNumber = prevQuoteNumber + 1;
   const quoteNumberString = quoteNumber.toString().padStart(4, "0");
   const id = `${year}${quoteNumberString}`;
-  await setDoc(doc(quoteCollection, id), quote);
+
+  await runTransaction(db, async (transaction) => {
+    const docRef = doc(quoteCollection, id);
+    const existing = await transaction.get(docRef);
+    if (existing.exists()) {
+      throw new Error(`Quote ${id} already exists`);
+    }
+    transaction.set(docRef, quote);
+  });
+
   return id;
 }

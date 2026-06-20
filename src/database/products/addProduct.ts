@@ -1,4 +1,5 @@
-import { setDoc, doc, query, getDocs } from "firebase/firestore";
+import { doc, query, getDocs, runTransaction } from "firebase/firestore";
+import { db } from "database";
 import productCollection, { ProductData } from "./productCollection";
 import { queryByIdConstraints } from "database/queryByIdConstraints";
 
@@ -18,6 +19,15 @@ export default async function addProduct(
   const productNumber = prevProductNumber + 1;
   const productNumberString = productNumber.toString().padStart(7, "0");
   const id = `${CUSTOM_PRODUCT}-${productNumberString}`;
-  await setDoc(doc(productCollection, id), product);
+
+  await runTransaction(db, async (transaction) => {
+    const docRef = doc(productCollection, id);
+    const existing = await transaction.get(docRef);
+    if (existing.exists()) {
+      throw new Error(`Product ${id} already exists`);
+    }
+    transaction.set(docRef, product);
+  });
+
   return id;
 }

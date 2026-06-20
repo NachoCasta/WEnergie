@@ -12,6 +12,7 @@ import { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import Authed from "components/Auth/Authed";
 import Auth from "components/Auth/Auth";
+import ErrorBoundary from "components/Common/ErrorBoundary";
 import { AppProvider } from "@toolpad/core";
 import { AUTHENTICATION } from "database/auth";
 import { useSession } from "hooks/useAuth";
@@ -82,7 +83,9 @@ export default function Layout() {
                 maxWidth="lg"
                 sx={{ pt: 4, pb: 4, minHeight: "calc(100% - 64px)" }}
               >
-                <Outlet />
+                <ErrorBoundary>
+                  <Outlet />
+                </ErrorBoundary>
                 <Copyright />
               </Container>
             </Authed>

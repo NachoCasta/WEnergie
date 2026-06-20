@@ -17,20 +17,21 @@ const googleProvider = new GoogleAuthProvider();
 export const signInWithGoogle = async () => {
   console.log("sign in with google");
   try {
-    return setPersistence(auth, browserSessionPersistence).then(async () => {
-      const result = await signInWithPopup(auth, googleProvider);
-      return {
-        success: true,
-        user: result.user,
-        error: null,
-      };
-    });
-  } catch (error: any) {
+    await setPersistence(auth, browserSessionPersistence);
+    const result = await signInWithPopup(auth, googleProvider);
+    return {
+      success: true,
+      user: result.user,
+      error: null,
+    };
+  } catch (error: unknown) {
     console.log("error", error);
+    const message =
+      error instanceof Error ? error.message : "Unknown error";
     return {
       success: false,
       user: null,
-      error: error.message,
+      error: message,
     };
   }
 };
@@ -40,10 +41,12 @@ export const firebaseSignOut = async () => {
   try {
     await signOut(auth);
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Unknown error";
     return {
       success: false,
-      error: error.message,
+      error: message,
     };
   }
 };

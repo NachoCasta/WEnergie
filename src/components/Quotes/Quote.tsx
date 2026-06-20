@@ -1,4 +1,4 @@
-import { Box, Button, TableContainer, Typography } from "@mui/material";
+import { Alert, Box, Button, TableContainer, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Title from "components/Common/Title";
@@ -23,6 +23,7 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useQuoteFromParams } from "hooks/useQuote";
 import {
+  getQuoteRows,
   getSubtotalPrice,
   getTotalDiscount,
   getTotalPrice,
@@ -31,10 +32,12 @@ import {
 import { formatClp, formatEuro } from "utils/formatCurrency";
 import useQuotePdf from "hooks/useQuotePdf";
 import deleteQuote from "database/quotes/deleteQuote";
-import { getProductName } from "utils/productUtils";
 
 export default function QuoteView() {
-  const [quote] = useQuoteFromParams();
+  const [quote, , error] = useQuoteFromParams();
+  if (error) {
+    return <Alert severity="error">Error al cargar la cotización: {error.message}</Alert>;
+  }
   return (
     <Grid container spacing={3}>
       <Grid item xs={8}>
@@ -121,9 +124,15 @@ function Actions({ quote }: ActionsProps) {
     });
     navigate(`/cotizaciones/nueva?${params.toString()}`);
   };
-  const handleDelete = () => {
-    deleteQuote(quote.id);
-    navigate("/cotizaciones");
+  const handleDelete = async () => {
+    if (!window.confirm("¿Estás seguro de que quieres eliminar esta cotización?")) return;
+    try {
+      await deleteQuote(quote.id);
+      navigate("/cotizaciones");
+    } catch (error) {
+      console.error("Error deleting quote:", error);
+      alert("Error al eliminar la cotización");
+    }
   };
   return (
     <Paper sx={{ p: 2, height: "100%" }}>
@@ -172,27 +181,8 @@ type ProductsProps = {
 
 function Products({ quote }: ProductsProps) {
   if (!quote) return null;
-  const { products, discount, euroToClp } = quote;
-  const rows = [
-    ...products.map((p) => ({
-      id: p.id,
-      name: getProductName(p),
-      quantity: p.quantity,
-      price: p.price,
-    })),
-    {
-      id: null,
-      name: "Transporte",
-      quantity: 1,
-      price: quote.deliveryCost,
-    },
-    {
-      id: null,
-      name: "Instalación",
-      quantity: 1,
-      price: quote.installationCost,
-    },
-  ];
+  const { discount, euroToClp } = quote;
+  const rows = getQuoteRows(quote);
   const subtotalPreDiscount = getSubtotalPrice(quote, false);
   const totalDiscount = getTotalDiscount(quote);
   const subtotal = getSubtotalPrice(quote);

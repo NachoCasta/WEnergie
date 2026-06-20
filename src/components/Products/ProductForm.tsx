@@ -28,10 +28,16 @@ export default function ProductForm(props: ProductFormProps) {
   const { productId } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (productId == null) return;
-    deleteProduct(productId);
-    navigate("/productos");
+    if (!window.confirm("¿Estás seguro de que quieres eliminar este producto?")) return;
+    try {
+      await deleteProduct(productId);
+      navigate("/productos");
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      alert("Error al eliminar el producto");
+    }
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -46,8 +52,14 @@ export default function ProductForm(props: ProductFormProps) {
       type: product?.type ?? ProductType.Custom,
     };
     setLoading(true);
-    await onSubmit(productData);
-    setLoading(false);
+    try {
+      await onSubmit(productData);
+    } catch (error) {
+      console.error("Error saving product:", error);
+      alert("Error al guardar el producto");
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <Paper

@@ -140,6 +140,7 @@ Heuristics for keeping files and components readable. Treat the limits as warnin
 
 **Common**
 - `Title` / `SubTitle` — page-level headings. Use instead of hand-rolling `<Typography variant="h4">`.
+- `ErrorBoundary` — React error boundary with retry button. Wraps `<Outlet>` in Layout.
 
 **Products**
 - `ProductTable` — generic table for displaying products with pagination, quantity input, and actions. Accepts type parameter `P extends Product`. Used in both `Products` (listing) and `NewQuote` (product selection).
@@ -151,6 +152,7 @@ Heuristics for keeping files and components readable. Treat the limits as warnin
 - `QuoteDocumentViewer` — full-page PDF preview (standalone route, no layout shell).
 - `QuoteDownloadButton` / `QuoteDownloader` — download button that triggers PDF generation via `useQuotePdf`.
 - `QuoteRow` / `RowSkeleton` — table row and loading skeleton for the quotes list.
+- `NewQuoteFields` — form field sub-components for NewQuote (`FormHeader`, `General`, `Client`, `ProductsSection`, `Delivery`, `Others`).
 
 ### Hooks (`hooks/`)
 
@@ -163,15 +165,18 @@ Heuristics for keeping files and components readable. Treat the limits as warnin
 | `useProduct(productId)` | Fetches a single product from Firestore |
 | `useProductFromParams()` | `useProduct` with ID from URL params |
 | `usePagination(getData, getCount)` | Cursor-based Firestore pagination (forward/back, page size) |
+| `useClientPagination(items)` | Client-side pagination for in-memory arrays — returns `[pageItems, paginationProps]` |
 | `useInput(initial)` | Controlled input state helper — returns `[value, handleChange, setValue]` |
 | `useQuotePdf(quote)` | Generates PDF blob for a quote — returns `[handleDownload, loading]` |
+| `useInitialValues()` | Parses URL query params into initial quote form values (used for quote templating) |
+| `useDeliveryCost(products, initialValues, ref)` | Manages interdependent weight/cost-per-kg/delivery-cost calculations |
 
 ### Utilities (`utils/`)
 
 | Module | Exports | Used in |
 | ------ | ------- | ------- |
 | `formatCurrency.ts` | `formatClp`, `formatEuro` | Quote, QuoteDocument, ProductTable, Quotes |
-| `quoteUtils.ts` | `getSubtotalPrice`, `getTotalDiscount`, `getTotalTax`, `getTotalPrice`, `getMainProductName`, `getFilteredQuotes` | Quote, QuoteDocument, Quotes |
+| `quoteUtils.ts` | `getQuoteRows`, `getSubtotalPrice`, `getTotalDiscount`, `getTotalTax`, `getTotalPrice`, `getMainProductName`, `getFilteredQuotes` | Quote, QuoteDocument, Quotes |
 | `productUtils.ts` | `getProductName`, `getProductDescription`, `getFilteredProducts` | ProductTable, ProductForm, Quote, QuoteDocument |
 | `parseExcel.ts` | `parseExcel` | ProductImportButton |
 | `parseProducts.ts` | `parseProducts` (via `ProductParser`) | ProductImportButton |

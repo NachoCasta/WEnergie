@@ -118,16 +118,16 @@ export default async function parseProducts(
   file: File,
   type: ProductType
 ): Promise<Array<Product>> {
-  const productPraser = new ProductParser(type);
+  const productParser = new ProductParser(type);
 
   const parsedProducts = await parseExcel(file, (data: RawProduct) =>
-    productPraser.parse(data)
+    productParser.parse(data)
   );
 
-  if (!productPraser.pricesFound) {
+  if (!productParser.pricesFound) {
     throw new Error("No prices found in the file");
   }
-  if (type === ProductType.Product && !productPraser.descriptionsFound) {
+  if (type === ProductType.Product && !productParser.descriptionsFound) {
     throw new Error("No descriptions found in the file");
   }
 

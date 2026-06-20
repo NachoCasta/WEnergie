@@ -19,5 +19,5 @@ export default async function parseExcel<RawData extends StringKeyedObject, Data
 }
 
 function normalizeRow<RawData extends StringKeyedObject>(row: RawData): RawData {
-  return _.mapKeys(row, (v, k) => k.trim()) as any
+  return _.mapKeys(row, (_v, k) => k.trim()) as RawData
 }

@@ -24,9 +24,10 @@ export default function ProductImportButton() {
   const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(e.currentTarget);
   };
-  const handleImport = async (e: any, type: ProductType) => {
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>, type: ProductType) => {
     setAnchorEl(null);
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
+    if (!file) return;
     setLoading(true);
     try {
       const products = await parseProducts(file, type);
@@ -69,7 +70,7 @@ export default function ProductImportButton() {
         onImport={handleImport}
         onClose={handleCloseMenu}
       />
-      <Snackbar open={isError || success}>
+      <Snackbar open={isError} onClose={handleCloseError}>
         <Alert
           onClose={handleCloseError}
           severity="error"

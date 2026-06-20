@@ -1,6 +1,43 @@
 import { Quote } from "database/quotes/quoteCollection";
 import _ from "lodash";
-import { getProductName } from "./productUtils";
+import { getProductName, getProductDescription } from "./productUtils";
+
+export type QuoteRow = {
+  id: string | null;
+  name: string;
+  description: string | null;
+  quantity: number;
+  price: number;
+};
+
+export function getQuoteRows(quote: Quote): QuoteRow[] {
+  const rows: QuoteRow[] = quote.products.map((p) => ({
+    id: p.id,
+    name: getProductName(p),
+    description: getProductDescription(p) || null,
+    quantity: p.quantity,
+    price: p.price,
+  }));
+  if (quote.deliveryCost !== 0) {
+    rows.push({
+      id: null,
+      name: "Transporte e internación",
+      description: null,
+      quantity: 1,
+      price: quote.deliveryCost,
+    });
+  }
+  if (quote.installationCost !== 0) {
+    rows.push({
+      id: null,
+      name: "Montaje, puesta en marcha y garantía",
+      description: null,
+      quantity: 1,
+      price: quote.installationCost,
+    });
+  }
+  return rows;
+}
 
 export function getSubtotalPrice(
   quote: Quote,
