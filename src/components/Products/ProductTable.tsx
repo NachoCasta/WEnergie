@@ -26,6 +26,7 @@ type ProductsTableProps<P> = {
   loading?: boolean;
   showQuantity?: boolean;
   maxHeight?: number;
+  containerRef?: React.Ref<HTMLDivElement>;
 };
 
 export default function ProductTable<P extends Product>(
@@ -39,10 +40,11 @@ export default function ProductTable<P extends Product>(
     onView,
     showQuantity = false,
     maxHeight,
+    containerRef,
   } = props;
   return (
     <>
-      <TableContainer sx={maxHeight != null ? { maxHeight } : null}>
+      <TableContainer ref={containerRef} sx={maxHeight != null ? { maxHeight } : null}>
         <Table stickyHeader size="small">
           <TableHead>
             <TableRow>

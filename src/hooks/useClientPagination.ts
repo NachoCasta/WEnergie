@@ -1,9 +1,9 @@
 import { TablePaginationProps } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function useClientPagination<T>(
   items: T[],
-): [T[], TablePaginationProps] {
+): [T[], TablePaginationProps, React.Dispatch<React.SetStateAction<number>>] {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -31,5 +31,5 @@ export default function useClientPagination<T>(
     onRowsPerPageChange: handleChangeRowsPerPage,
   };
 
-  return [currentPageItems, paginationProps];
+  return [currentPageItems, paginationProps, setPage];
 }

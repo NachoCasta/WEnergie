@@ -2,7 +2,7 @@ import { IconButton, InputAdornment, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Title, { SubTitle } from "components/Common/Title";
 import ProductTable from "components/Products/ProductTable";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import CircularProgress from "@mui/material/CircularProgress";
 import useInput from "hooks/useInput";
@@ -149,7 +149,27 @@ export function ProductsSection({
       handleAdd();
     }
   };
-  const [currentPageProducts, paginationProps] = useClientPagination(products);
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const justAddedRef = useRef(false);
+  const prevLengthRef = useRef(products.length);
+  const [currentPageProducts, paginationProps, setPage] = useClientPagination(products);
+
+  useEffect(() => {
+    if (products.length > prevLengthRef.current) {
+      const lastPage = Math.floor((products.length - 1) / paginationProps.rowsPerPage);
+      setPage(lastPage);
+      justAddedRef.current = true;
+    }
+    prevLengthRef.current = products.length;
+  }, [products.length]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (justAddedRef.current) {
+      justAddedRef.current = false;
+      tableContainerRef.current?.scrollTo({ top: tableContainerRef.current.scrollHeight });
+    }
+  }, [currentPageProducts]);
+
   return (
     <>
       <Grid item lg={9} sx={{ display: "flex", alignItems: "center" }}>
@@ -189,6 +209,7 @@ export function ProductsSection({
           onQuantityChange={onQuantityChange}
           showQuantity
           maxHeight={440}
+          containerRef={tableContainerRef}
         />
       </Grid>
     </>
