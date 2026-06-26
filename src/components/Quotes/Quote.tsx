@@ -214,7 +214,7 @@ function Products({ quote }: ProductsProps) {
                 </TableCell>
               </TableRow>
             ))}
-            {totalDiscount > 0 && (
+            {discount > 0 && (
               <>
                 <FooterRow
                   price={subtotalPreDiscount}
@@ -231,7 +231,7 @@ function Products({ quote }: ProductsProps) {
             <FooterRow
               price={subtotal}
               euroToClp={euroToClp}
-              first={totalDiscount === 0}
+              first={discount === 0}
             >
               Total Neto
             </FooterRow>

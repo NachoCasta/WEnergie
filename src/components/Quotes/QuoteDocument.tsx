@@ -151,7 +151,7 @@ function Table({ quote }: QuoteProps) {
           </View>
         </View>
       ))}
-      {totalDiscount > 0 && (
+      {discount > 0 && (
         <>
           <TableFooterRow
             price={subtotalPreDiscount}
@@ -168,7 +168,7 @@ function Table({ quote }: QuoteProps) {
       <TableFooterRow
         price={subtotal}
         euroToClp={euroToClp}
-        first={totalDiscount === 0}
+        first={discount === 0}
       >
         TOTAL NETO
       </TableFooterRow>
