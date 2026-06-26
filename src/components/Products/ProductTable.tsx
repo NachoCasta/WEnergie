@@ -13,6 +13,8 @@ import { Product } from "database/products/productCollection";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { QuoteProduct } from "database/quotes/quoteCollection";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Input from "@mui/material/Input";
 import { getProductName } from "utils/productUtils";
 import { formatEuro } from "utils/formatCurrency";
@@ -23,6 +25,8 @@ type ProductsTableProps<P> = {
   onRemove?: (productId: string) => void;
   onQuantityChange?: (productId: string, quantity: number) => void;
   onView?: (productId: string) => void;
+  onMoveUp?: (productId: string) => void;
+  onMoveDown?: (productId: string) => void;
   loading?: boolean;
   showQuantity?: boolean;
   maxHeight?: number;
@@ -38,10 +42,13 @@ export default function ProductTable<P extends Product>(
     onRemove,
     onQuantityChange,
     onView,
+    onMoveUp,
+    onMoveDown,
     showQuantity = false,
     maxHeight,
     containerRef,
   } = props;
+  const { page, rowsPerPage, count } = paginationProps;
   return (
     <>
       <TableContainer ref={containerRef} sx={maxHeight != null ? { maxHeight } : null}>
@@ -53,7 +60,7 @@ export default function ProductTable<P extends Product>(
               <TableCell>Peso</TableCell>
               {showQuantity && <TableCell>Cantidad</TableCell>}
               <TableCell>Precio</TableCell>
-              {(onRemove || onView) && (
+              {(onRemove || onView || onMoveUp || onMoveDown) && (
                 <TableCell align="center">Acciones</TableCell>
               )}
             </TableRow>
@@ -88,6 +95,9 @@ export default function ProductTable<P extends Product>(
                 }
               }
 
+              const globalIndex = (page as number) * (rowsPerPage as number) + index;
+              const isFirst = globalIndex === 0;
+              const isLast = globalIndex === (count as number) - 1;
               return (
                 <TableRow key={`${product.id}-${index}`}>
                   <TableCell>{product.id}</TableCell>
@@ -98,6 +108,24 @@ export default function ProductTable<P extends Product>(
                   )}
                   <TableCell>{formatEuro(product.price)}</TableCell>
                   <TableCell align="center">
+                    {onMoveUp && (
+                      <IconButton
+                        size="small"
+                        onClick={() => onMoveUp(product.id)}
+                        disabled={isFirst}
+                      >
+                        <KeyboardArrowUpIcon />
+                      </IconButton>
+                    )}
+                    {onMoveDown && (
+                      <IconButton
+                        size="small"
+                        onClick={() => onMoveDown(product.id)}
+                        disabled={isLast}
+                      >
+                        <KeyboardArrowDownIcon />
+                      </IconButton>
+                    )}
                     {onRemove && (
                       <IconButton onClick={() => onRemove(product.id)}>
                         <DeleteIcon />

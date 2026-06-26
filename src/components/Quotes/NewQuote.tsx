@@ -63,6 +63,20 @@ export default function NewQuote() {
       products.map((p) => (p.id === productId ? { ...p, quantity } : p)),
     );
   };
+  const handleMoveUp = (productId: string) => {
+    const index = products.findIndex((p) => p.id === productId);
+    if (index <= 0) return;
+    const next = [...products];
+    [next[index - 1], next[index]] = [next[index], next[index - 1]];
+    setProducts(next);
+  };
+  const handleMoveDown = (productId: string) => {
+    const index = products.findIndex((p) => p.id === productId);
+    if (index >= products.length - 1) return;
+    const next = [...products];
+    [next[index], next[index + 1]] = [next[index + 1], next[index]];
+    setProducts(next);
+  };
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -118,6 +132,8 @@ export default function NewQuote() {
               onAdd={handleAdd}
               onRemove={handleRemove}
               onQuantityChange={handleQuantityChange}
+              onMoveUp={handleMoveUp}
+              onMoveDown={handleMoveDown}
             />
             <Delivery
               products={products}

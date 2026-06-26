@@ -119,6 +119,8 @@ type ProductsSectionProps = {
   onAdd: (productId: string) => Promise<void>;
   onRemove: (productId: string) => void;
   onQuantityChange: (productId: string, quantity: number) => void;
+  onMoveUp: (productId: string) => void;
+  onMoveDown: (productId: string) => void;
 };
 
 export function ProductsSection({
@@ -126,6 +128,8 @@ export function ProductsSection({
   onAdd,
   onRemove,
   onQuantityChange,
+  onMoveUp,
+  onMoveDown,
 }: ProductsSectionProps) {
   const [productId, handleProductIdChange] = useInput("", () => {
     setAddError("");
@@ -207,6 +211,8 @@ export function ProductsSection({
           paginationProps={paginationProps}
           onRemove={onRemove}
           onQuantityChange={onQuantityChange}
+          onMoveUp={onMoveUp}
+          onMoveDown={onMoveDown}
           showQuantity
           maxHeight={440}
           containerRef={tableContainerRef}
