@@ -9,16 +9,19 @@ interface Data {
 
 type GetData<Data> = (opts: GetDataOpts) => Promise<Data[]>;
 
-type Result<Data> = [Data[], boolean, TablePaginationProps, number];
+type ResetFn = (newRowsPerPage?: number) => void;
+
+type Result<Data> = [Data[], boolean, TablePaginationProps, number, ResetFn];
 
 export default function usePagination<D extends Data>(
   getData: GetData<D>,
   getDataCount: () => Promise<number>,
-  deps: any[] = []
+  deps: any[] = [],
+  initialRowsPerPage: number = 10
 ): Result<D> {
   const { value: count } = useAsync(getDataCount, deps);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
   const [after, setAfter] = useState<string | null>(null);
   const [at, setAt] = useState<string | null>(null);
   const { value: data = [], loading } = useAsync(
@@ -55,6 +58,19 @@ export default function usePagination<D extends Data>(
   ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+    setAfter(null);
+    setAt(null);
+    pageCursorsRef.current = {};
+  };
+
+  const resetPagination: ResetFn = (newRowsPerPage) => {
+    setPage(0);
+    setAfter(null);
+    setAt(null);
+    pageCursorsRef.current = {};
+    if (newRowsPerPage !== undefined) {
+      setRowsPerPage(newRowsPerPage);
+    }
   };
 
   const paginationProps = {
@@ -64,5 +80,5 @@ export default function usePagination<D extends Data>(
     onPageChange: handleChangePage,
     onRowsPerPageChange: handleChangeRowsPerPage,
   };
-  return [data, loading, paginationProps, rowsPerPage];
+  return [data, loading, paginationProps, rowsPerPage, resetPagination];
 }

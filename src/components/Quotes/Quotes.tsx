@@ -25,19 +25,34 @@ import {
   getTotalPrice,
 } from "utils/quoteUtils";
 import { Quote } from "database/quotes/quoteCollection";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import getQuotesCount from "database/quotes/getQuotesCount";
 import QuoteDownloadButton from "./QuoteDownloadButton";
 import usePagination from "hooks/usePagination";
+import { useSearchParams } from "react-router-dom";
 
 export default function Quotes() {
   const [search, setSearch] = useState<string | null>(null);
   const navigate = useNavigate();
   const handleNew = () => navigate("nueva");
-  const [quotes, loading, paginationProps, rowsPerPage] = usePagination(
-    getQuotes,
-    getQuotesCount
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlSize = Number(searchParams.get("size")) || 10;
+  const [quotes, loading, paginationProps, rowsPerPage, resetPagination] =
+    usePagination(getQuotes, getQuotesCount, [], urlSize);
+
+  useEffect(() => {
+    resetPagination(urlSize);
+  }, [urlSize]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleRowsPerPageChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newSize = Number(e.target.value);
+    setSearchParams(newSize === 10 ? {} : { size: String(newSize) }, {
+      replace: true,
+    });
+    paginationProps.onRowsPerPageChange!(e);
+  };
   const filteredQuotes = useMemo(
     () => getFilteredQuotes(quotes, search),
     [quotes, search]
@@ -96,6 +111,7 @@ export default function Quotes() {
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
               {...paginationProps}
+              onRowsPerPageChange={handleRowsPerPageChange}
             />
           </Grid>
         </Paper>
