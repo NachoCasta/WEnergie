@@ -75,9 +75,14 @@ export function getMainProductName(quote: Quote): string {
   return getProductName(mainProduct);
 }
 
-export function getFilteredQuotes(quotes: Quote[], filter: string | null):  Quote[] {
+export function getFilteredQuotes(quotes: Quote[], filter: string | null): Quote[] {
   if (!filter) {
-    return quotes
+    return quotes;
   }
-  return quotes.filter((quote) => quote.client.name.toLowerCase().includes(filter.toLowerCase()))
+  const lower = filter.toLowerCase();
+  return quotes.filter(
+    (quote) =>
+      quote.client.name.toLowerCase().includes(lower) ||
+      quote.concept?.toLowerCase().includes(lower)
+  );
 }
