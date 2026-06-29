@@ -32,7 +32,7 @@ import usePagination from "hooks/usePagination";
 import { useSearchParams } from "react-router-dom";
 
 export default function Quotes() {
-  const [search, setSearch] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const handleNew = () => navigate("nueva");
   const [searchParams, setSearchParams] = useSearchParams();
@@ -53,10 +53,29 @@ export default function Quotes() {
     });
     paginationProps.onRowsPerPageChange!(e);
   };
+
+  // When search is active, load ALL quotes once so filtering works across
+  // all documents, not just the current paginated page.
+  const [allQuotes, setAllQuotes] = useState<Quote[]>([]);
+  const [allLoading, setAllLoading] = useState(false);
+  const searchActive = search.length > 0;
+  useEffect(() => {
+    if (!searchActive) {
+      setAllQuotes([]);
+      return;
+    }
+    setAllLoading(true);
+    getQuotes({}).then((all) => {
+      setAllQuotes(all);
+      setAllLoading(false);
+    });
+  }, [searchActive]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const filteredQuotes = useMemo(
-    () => getFilteredQuotes(quotes, search),
-    [quotes, search]
+    () => searchActive ? getFilteredQuotes(allQuotes, search) : quotes,
+    [allQuotes, quotes, search, searchActive]
   );
+  const isLoading = searchActive ? allLoading : loading;
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -97,7 +116,7 @@ export default function Quotes() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {loading ? (
+                  {isLoading ? (
                     <RowSkeleton count={rowsPerPage} />
                   ) : (
                     filteredQuotes.map((quote) => (
