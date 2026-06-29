@@ -15,7 +15,6 @@ const googleProvider = new GoogleAuthProvider();
 
 // Sign in with Google functionality
 export const signInWithGoogle = async () => {
-  console.log("sign in with google");
   try {
     await setPersistence(auth, browserSessionPersistence);
     const result = await signInWithPopup(auth, googleProvider);
@@ -25,7 +24,6 @@ export const signInWithGoogle = async () => {
       error: null,
     };
   } catch (error: unknown) {
-    console.log("error", error);
     const message =
       error instanceof Error ? error.message : "Unknown error";
     return {
