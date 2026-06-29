@@ -4,7 +4,7 @@ import Paper from "@mui/material/Paper";
 import Title from "components/Common/Title";
 import getProducts from "database/products/getProducts";
 import AddIcon from "@mui/icons-material/Add";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import ProductTable from "./ProductTable";
 import { useNavigate } from "react-router-dom";
 import usePagination from "hooks/usePagination";
@@ -26,10 +26,10 @@ export default function Products() {
     [products, search]
   );
   const navigate = useNavigate();
-  const handleAdd = () => navigate("nuevo");
-  const handleView = (productId: string) => {
+  const handleAdd = useCallback(() => navigate("nuevo"), [navigate]);
+  const handleView = useCallback((productId: string) => {
     navigate(productId);
-  };
+  }, [navigate]);
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>

@@ -21,7 +21,7 @@ type Result<Data> = [Data[], boolean, TablePaginationProps, number, ResetFn];
 export default function usePagination<D extends Data>(
   getData: GetData<D>,
   getDataCount: () => Promise<number>,
-  deps: any[] = [],
+  deps: React.DependencyList = [],
   initialRowsPerPage: number = 10,
   initialState: InitialState = {}
 ): Result<D> {
@@ -49,7 +49,7 @@ export default function usePagination<D extends Data>(
     if (!loading && data.length > 0) {
       pageCursorsRef.current[page] = data[0].id;
     }
-  });
+  }, [loading, data, page]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);

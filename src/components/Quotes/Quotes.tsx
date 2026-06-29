@@ -29,7 +29,7 @@ import {
   getTotalPrice,
 } from "utils/quoteUtils";
 import { Quote } from "database/quotes/quoteCollection";
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback, memo } from "react";
 import getQuotesCount from "database/quotes/getQuotesCount";
 import QuoteDownloadButton from "./QuoteDownloadButton";
 import usePagination from "hooks/usePagination";
@@ -75,7 +75,7 @@ export default function Quotes() {
     navigate(quoteId);
   }, [paginationProps.page, quotes, navigate]);
 
-  const handleRowsPerPageChange = (
+  const handleRowsPerPageChange = useCallback((
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const newSize = Number(e.target.value);
@@ -83,7 +83,7 @@ export default function Quotes() {
       replace: true,
     });
     paginationProps.onRowsPerPageChange!(e);
-  };
+  }, [paginationProps.onRowsPerPageChange, setSearchParams]);
 
   const [allQuotes, setAllQuotes] = useState<Quote[]>([]);
   const [allLoaded, setAllLoaded] = useState(false);
@@ -206,7 +206,7 @@ type QuoteRowProps = {
   onOpen: (id: string) => void;
 };
 
-function QuoteRow({ quote, onOpen }: QuoteRowProps) {
+const QuoteRow = memo(function QuoteRow({ quote, onOpen }: QuoteRowProps) {
   return (
     <TableRow>
       <TableCell>{quote.id}</TableCell>
@@ -225,7 +225,7 @@ function QuoteRow({ quote, onOpen }: QuoteRowProps) {
       </TableCell>
     </TableRow>
   );
-}
+});
 
 function RowSkeleton(props: { count: number }) {
   return (

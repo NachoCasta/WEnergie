@@ -19,6 +19,10 @@ import Input from "@mui/material/Input";
 import { getProductName } from "utils/productUtils";
 import { formatEuro } from "utils/formatCurrency";
 
+function isQuoteProduct(product: Product): product is QuoteProduct {
+  return "quantity" in product;
+}
+
 type ProductsTableProps<P> = {
   products: Array<P>;
   paginationProps: TablePaginationProps;
@@ -68,8 +72,8 @@ export default function ProductTable<P extends Product>(
           <TableBody>
             {products.map((product, index) => {
               let quantityCellContent;
-              if (showQuantity) {
-                const { quantity } = product as unknown as QuoteProduct;
+              if (showQuantity && isQuoteProduct(product)) {
+                const { quantity } = product;
                 if (onQuantityChange) {
                   const handleChange = (
                     e: React.ChangeEvent<HTMLInputElement>

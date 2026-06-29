@@ -78,6 +78,16 @@ npm test        # Jest tests in watch mode
 npm run analyze # Bundle size analysis (requires a build first)
 ```
 
+## Dev Server
+
+- Always use port **3000** (`http://localhost:3000`) — never pick a different port.
+- If port 3000 is already in use, assume the dev server is already running and use it as-is — do not kill it or start a new one.
+- Only start the dev server if nothing is listening on port 3000:
+  ```bash
+  lsof -ti :3000 || npm start
+  ```
+- **Do not test UI changes yourself.** After making changes, ask the user to test in the browser and report back. The user always has a dev server available.
+
 ## Deployment
 
 - **CI**: GitHub Actions (`.github/workflows/firebase-hosting-merge.yml`) — on push to `master`, builds the app and deploys to Firebase Hosting via service account
@@ -88,6 +98,7 @@ npm run analyze # Bundle size analysis (requires a build first)
 
 - Push directly to `master` — no PRs
 - Commit message style: `[scope] description` (e.g. `[quote] increase font size`, `[fix] type error`)
+- **Never push without explicit confirmation from the user** — always commit locally first, then ask before pushing.
 
 ## Code Structure & Sizing
 
@@ -150,7 +161,8 @@ Heuristics for keeping files and components readable. Treat the limits as warnin
 **Quotes**
 - `QuoteDocument` — react-pdf `<Document>` template for generating quote PDFs (header, client info, product table, pricing, footer).
 - `QuoteDocumentViewer` — full-page PDF preview (standalone route, no layout shell).
-- `QuoteDownloadButton` / `QuoteDownloader` — download button that triggers PDF generation via `useQuotePdf`.
+- `QuoteDownloadButton` — download button (memoized); lazy-loads `QuoteDownloader` on click so `@react-pdf/renderer` stays out of the initial bundle.
+- `QuoteDownloader` — internal component (lazy-loaded chunk) that calls `useQuotePdf` and triggers the download.
 - `QuoteRow` / `RowSkeleton` — table row and loading skeleton for the quotes list.
 - `NewQuoteFields` — form field sub-components for NewQuote (`FormHeader`, `General`, `Client`, `ProductsSection`, `Delivery`, `Others`).
 
@@ -178,8 +190,9 @@ Heuristics for keeping files and components readable. Treat the limits as warnin
 | `formatCurrency.ts` | `formatClp`, `formatEuro` | Quote, QuoteDocument, ProductTable, Quotes |
 | `quoteUtils.ts` | `getQuoteRows`, `getSubtotalPrice`, `getTotalDiscount`, `getTotalTax`, `getTotalPrice`, `getMainProductName`, `getFilteredQuotes` | Quote, QuoteDocument, Quotes |
 | `productUtils.ts` | `getProductName`, `getProductDescription`, `getFilteredProducts` | ProductTable, ProductForm, Quote, QuoteDocument |
-| `parseExcel.ts` | `parseExcel` | ProductImportButton |
+| `parseExcel.ts` | `parseExcel` (lazy-loads xlsx via dynamic import) | ProductImportButton |
 | `parseProducts.ts` | `parseProducts` (via `ProductParser`) | ProductImportButton |
+| `handleError.ts` | `handleError(error, userMessage)` — console.error + alert | NewQuote, ProductForm, Quote |
 
 ### Database (`database/`)
 
@@ -196,7 +209,8 @@ Heuristics for keeping files and components readable. Treat the limits as warnin
 ## Conventions
 
 - **All source code lives in `src/`**
-- **Imports use absolute paths** from `src/` as base (configured via `tsconfig.json` `baseUrl`)
+- **Imports use absolute paths** from `src/` as base (configured via `tsconfig.json` `baseUrl`). Exception: do NOT name files `constants.ts` — conflicts with the Node.js built-in. Use `appConstants.ts` instead.
+- `appConstants.ts` — app-wide constants (`EUR_TO_CLP_DEFAULT = 1010`)
 - Firebase calls belong in `src/database/` — keep components free of direct Firestore calls
 - Custom hooks live in `src/hooks/` — data fetching, auth state, pagination logic
 - Utility functions live in `src/utils/` — quote calculations, currency formatting, Excel parsing

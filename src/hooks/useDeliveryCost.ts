@@ -1,7 +1,5 @@
-import { useEffect, useRef } from "react";
-import { useLatest } from "react-use";
-import _ from "lodash";
-import useInput from "./useInput";
+import { useCallback, useEffect, useReducer } from "react";
+import { round } from "lodash";
 import { InitialQuoteValues } from "./useInitialValues";
 import { QuoteProduct } from "database/quotes/quoteCollection";
 
@@ -14,30 +12,71 @@ type DeliveryCostResult = {
   handleDeliveryCostChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
+type State = {
+  weight: string;
+  deliveryCostPerKg: string;
+  deliveryCost: string;
+};
+
+type Action =
+  | { type: "SET_WEIGHT"; value: string }
+  | { type: "SET_COST_PER_KG"; value: string }
+  | { type: "SET_DELIVERY_COST"; value: string }
+  | { type: "PRODUCTS_CHANGED"; totalWeight: number };
+
+function computeCost(weight: string, costPerKg: string): string {
+  return String(round(parseFloat(weight) * parseFloat(costPerKg), 2));
+}
+
+function computeCostPerKg(deliveryCost: string, weight: string): string {
+  return String(round(parseFloat(deliveryCost) / parseFloat(weight), 2));
+}
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "SET_WEIGHT":
+      return {
+        weight: action.value,
+        deliveryCostPerKg: state.deliveryCostPerKg,
+        deliveryCost: computeCost(action.value, state.deliveryCostPerKg),
+      };
+    case "SET_COST_PER_KG":
+      return {
+        weight: state.weight,
+        deliveryCostPerKg: action.value,
+        deliveryCost: computeCost(state.weight, action.value),
+      };
+    case "SET_DELIVERY_COST":
+      return {
+        weight: state.weight,
+        deliveryCostPerKg: computeCostPerKg(action.value, state.weight),
+        deliveryCost: action.value,
+      };
+    case "PRODUCTS_CHANGED": {
+      const newWeight = String(action.totalWeight);
+      return {
+        weight: newWeight,
+        deliveryCostPerKg: state.deliveryCostPerKg,
+        deliveryCost: computeCost(newWeight, state.deliveryCostPerKg),
+      };
+    }
+  }
+}
+
 export default function useDeliveryCost(
   products: QuoteProduct[],
   initialValues: InitialQuoteValues,
   productsAutoChangedRef: React.MutableRefObject<boolean>,
 ): DeliveryCostResult {
-  const [weight, handleWeightChange, setWeight] = useInput(
-    initialValues.weight ?? "0",
-  );
-  const [deliveryCostPerKg, handleDeliveryCostPerKgChange, setDeliveryCostPerKg] =
-    useInput(() => {
-      if (initialValues.weight != null && initialValues.deliveryCost != null) {
-        return String(
-          Number.parseFloat(initialValues.deliveryCost) /
-            Number.parseFloat(initialValues.weight),
-        );
-      }
-      return "24";
-    });
-  const [deliveryCost, handleDeliveryCostChange, setDeliveryCost] = useInput(
-    initialValues.deliveryCost ?? "0",
-  );
-
-  const deliveryCostAutoChangedRef = useRef(false);
-  const deliveryCostPerKgAutoChangedRef = useRef(false);
+  const [state, dispatch] = useReducer(reducer, undefined, () => {
+    const weight = initialValues.weight ?? "0";
+    const deliveryCost = initialValues.deliveryCost ?? "0";
+    const deliveryCostPerKg =
+      initialValues.weight != null && initialValues.deliveryCost != null
+        ? String(parseFloat(deliveryCost) / parseFloat(weight))
+        : "24";
+    return { weight, deliveryCostPerKg, deliveryCost };
+  });
 
   useEffect(() => {
     const initialProducts = initialValues.products;
@@ -56,49 +95,31 @@ export default function useDeliveryCost(
       (total, p) => total + (p?.weight ?? 0) * p.quantity,
       0,
     );
-    setWeight(String(totalWeight));
-  }, [initialValues.products, products, productsAutoChangedRef, setWeight]);
+    dispatch({ type: "PRODUCTS_CHANGED", totalWeight });
+  }, [initialValues.products, products, productsAutoChangedRef]);
 
-  useEffect(() => {
-    if (deliveryCostPerKgAutoChangedRef.current) {
-      deliveryCostPerKgAutoChangedRef.current = false;
-      return;
-    }
-    setDeliveryCost(
-      String(
-        _.round(
-          Number.parseFloat(weight) * Number.parseFloat(deliveryCostPerKg),
-          2,
-        ),
-      ),
-    );
-    deliveryCostAutoChangedRef.current = true;
-  }, [setDeliveryCost, weight, deliveryCostPerKg]);
-
-  const latestWeight = useLatest(weight);
-  useEffect(() => {
-    if (deliveryCostAutoChangedRef.current) {
-      deliveryCostAutoChangedRef.current = false;
-      return;
-    }
-    setDeliveryCostPerKg(
-      String(
-        _.round(
-          Number.parseFloat(deliveryCost) /
-            Number.parseFloat(latestWeight.current),
-          2,
-        ),
-      ),
-    );
-    deliveryCostPerKgAutoChangedRef.current = true;
-  }, [setDeliveryCostPerKg, deliveryCost, latestWeight]);
+  const handleWeightChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) =>
+      dispatch({ type: "SET_WEIGHT", value: e.target.value }),
+    [],
+  );
+  const handleDeliveryCostPerKgChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) =>
+      dispatch({ type: "SET_COST_PER_KG", value: e.target.value }),
+    [],
+  );
+  const handleDeliveryCostChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) =>
+      dispatch({ type: "SET_DELIVERY_COST", value: e.target.value }),
+    [],
+  );
 
   return {
-    weight,
+    weight: state.weight,
     handleWeightChange,
-    deliveryCostPerKg,
+    deliveryCostPerKg: state.deliveryCostPerKg,
     handleDeliveryCostPerKgChange,
-    deliveryCost,
+    deliveryCost: state.deliveryCost,
     handleDeliveryCostChange,
   };
 }

@@ -1,5 +1,5 @@
 import { Quote } from "database/quotes/quoteCollection";
-import _ from "lodash";
+import { maxBy } from "lodash";
 import { getProductName, getProductDescription } from "./productUtils";
 
 export type QuoteRow = {
@@ -70,7 +70,7 @@ export function getTotalPrice(quote: Quote): number {
 }
 
 export function getMainProductName(quote: Quote): string {
-  const mainProduct = _.maxBy(quote.products, (p) => p.price * p.quantity);
+  const mainProduct = maxBy(quote.products, (p) => p.price * p.quantity);
   if (!mainProduct) return "";
   return getProductName(mainProduct);
 }

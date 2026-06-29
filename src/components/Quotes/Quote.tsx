@@ -32,6 +32,7 @@ import {
 import { formatClp, formatEuro } from "utils/formatCurrency";
 import useQuotePdf from "hooks/useQuotePdf";
 import deleteQuote from "database/quotes/deleteQuote";
+import { handleError } from "utils/handleError";
 
 export default function QuoteView() {
   const [quote, , error] = useQuoteFromParams();
@@ -130,8 +131,7 @@ function Actions({ quote }: ActionsProps) {
       await deleteQuote(quote.id);
       navigate("/cotizaciones");
     } catch (error) {
-      console.error("Error deleting quote:", error);
-      alert("Error al eliminar la cotización");
+      handleError(error, "Error al eliminar la cotización");
     }
   };
   return (

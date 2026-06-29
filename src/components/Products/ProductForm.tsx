@@ -6,6 +6,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { SubTitle } from "components/Common/Title";
 import { ProductData, ProductType } from "database/products/productCollection";
 import { useState } from "react";
+import { handleError } from "utils/handleError";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { getProductDescription, getProductName } from "utils/productUtils";
@@ -35,8 +36,7 @@ export default function ProductForm(props: ProductFormProps) {
       await deleteProduct(productId);
       navigate("/productos");
     } catch (error) {
-      console.error("Error deleting product:", error);
-      alert("Error al eliminar el producto");
+      handleError(error, "Error al eliminar el producto");
     }
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -55,8 +55,7 @@ export default function ProductForm(props: ProductFormProps) {
     try {
       await onSubmit(productData);
     } catch (error) {
-      console.error("Error saving product:", error);
-      alert("Error al guardar el producto");
+      handleError(error, "Error al guardar el producto");
     } finally {
       setLoading(false);
     }

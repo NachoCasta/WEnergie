@@ -10,6 +10,7 @@ import { QuoteProduct } from "database/quotes/quoteCollection";
 import useInitialValues from "hooks/useInitialValues";
 import useClientPagination from "hooks/useClientPagination";
 import useDeliveryCost from "hooks/useDeliveryCost";
+import { EUR_TO_CLP_DEFAULT } from "appConstants";
 
 export function FormHeader() {
   const date = new Date().toLocaleDateString("es-CL");
@@ -332,7 +333,7 @@ export function Others() {
               ),
             }}
             inputProps={{ min: 1 }}
-            defaultValue={initialValues.euroToClp ?? 1010}
+            defaultValue={initialValues.euroToClp ?? EUR_TO_CLP_DEFAULT}
           />
         </Grid>
         <Grid item lg={4}>

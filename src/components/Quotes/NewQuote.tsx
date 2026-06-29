@@ -1,6 +1,7 @@
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { useEffect, useRef, useState } from "react";
+import { handleError } from "utils/handleError";
 import AddIcon from "@mui/icons-material/Add";
 import getProduct from "database/products/getProduct";
 import addQuote from "database/quotes/addQuote";
@@ -109,8 +110,7 @@ export default function NewQuote() {
       const id = await addQuote(quote);
       navigate(`/cotizaciones/${id}`);
     } catch (error) {
-      console.error("Error creating quote:", error);
-      alert("Error al crear la cotización");
+      handleError(error, "Error al crear la cotización");
     } finally {
       setLoading(false);
     }

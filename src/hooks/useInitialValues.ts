@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useLocation } from "react-use";
-import _ from "lodash";
+import { useSearchParams } from "react-router-dom";
+import { countBy } from "lodash";
 
 export type InitialQuoteValues = {
   concept: string | null;
@@ -20,14 +20,13 @@ export type InitialQuoteValues = {
 };
 
 export default function useInitialValues(): InitialQuoteValues {
-  const { search } = useLocation();
-  const params = useMemo(() => new URLSearchParams(search), [search]);
+  const [params] = useSearchParams();
   const productIds = params.get("products");
   const products = useMemo(() => {
     if (productIds == null) {
       return null;
     }
-    return Object.entries(_.countBy(productIds.split(","))).map(
+    return Object.entries(countBy(productIds.split(","))).map(
       ([id, quantity]) => ({ id, quantity }),
     );
   }, [productIds]);
