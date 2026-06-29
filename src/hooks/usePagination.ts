@@ -11,19 +11,25 @@ type GetData<Data> = (opts: GetDataOpts) => Promise<Data[]>;
 
 type ResetFn = (newRowsPerPage?: number) => void;
 
+interface InitialState {
+  page?: number;
+  at?: string | null;
+}
+
 type Result<Data> = [Data[], boolean, TablePaginationProps, number, ResetFn];
 
 export default function usePagination<D extends Data>(
   getData: GetData<D>,
   getDataCount: () => Promise<number>,
   deps: any[] = [],
-  initialRowsPerPage: number = 10
+  initialRowsPerPage: number = 10,
+  initialState: InitialState = {}
 ): Result<D> {
   const { value: count } = useAsync(getDataCount, deps);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(initialState.page ?? 0);
   const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
   const [after, setAfter] = useState<string | null>(null);
-  const [at, setAt] = useState<string | null>(null);
+  const [at, setAt] = useState<string | null>(initialState.at ?? null);
   const { value: data = [], loading } = useAsync(
     () =>
       getData({
@@ -34,11 +40,14 @@ export default function usePagination<D extends Data>(
     [after, at, rowsPerPage, ...deps]
   );
 
-  const pageCursorsRef = useRef<{ [page: number]: string }>({});
+  const pageCursorsRef = useRef<{ [page: number]: string }>(
+    initialState.page && initialState.at
+      ? { [initialState.page]: initialState.at }
+      : {}
+  );
   useEffect(() => {
     if (!loading && data.length > 0) {
-      const cursorId = data[0].id;
-      pageCursorsRef.current[page] = cursorId;
+      pageCursorsRef.current[page] = data[0].id;
     }
   });
 

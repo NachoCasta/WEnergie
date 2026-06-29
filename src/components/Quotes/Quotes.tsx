@@ -5,7 +5,10 @@ import {
   TableContainer,
   TablePagination,
   TextField,
+  Typography,
 } from "@mui/material";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -16,6 +19,7 @@ import TableRow from "@mui/material/TableRow";
 import Title from "components/Common/Title";
 import AddIcon from "@mui/icons-material/Add";
 import getQuotes from "database/quotes/getQuotes";
+import getQuotesByYear from "database/quotes/getQuotesByYear";
 import { useNavigate } from "react-router";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { formatClp } from "utils/formatCurrency";
@@ -25,24 +29,51 @@ import {
   getTotalPrice,
 } from "utils/quoteUtils";
 import { Quote } from "database/quotes/quoteCollection";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import getQuotesCount from "database/quotes/getQuotesCount";
 import QuoteDownloadButton from "./QuoteDownloadButton";
 import usePagination from "hooks/usePagination";
+import useClientPagination from "hooks/useClientPagination";
 import { useSearchParams } from "react-router-dom";
 
 export default function Quotes() {
   const [search, setSearch] = useState("");
+  const currentYear = new Date().getFullYear();
+  const [searchYear, setSearchYear] = useState(currentYear);
   const navigate = useNavigate();
   const handleNew = () => navigate("nueva");
   const [searchParams, setSearchParams] = useSearchParams();
   const urlSize = Number(searchParams.get("size")) || 10;
-  const [quotes, loading, paginationProps, rowsPerPage, resetPagination] =
-    usePagination(getQuotes, getQuotesCount, [], urlSize);
 
+  const savedPosition = useRef<{ page: number; at: string } | null>(null);
+  if (savedPosition.current === null) {
+    try {
+      const raw = sessionStorage.getItem("quotes-position");
+      savedPosition.current = raw ? JSON.parse(raw) : undefined;
+    } catch { /* ignore */ }
+  }
+
+  const [quotes, loading, paginationProps, rowsPerPage, resetPagination] =
+    usePagination(getQuotes, getQuotesCount, [], urlSize, {
+      page: savedPosition.current?.page,
+      at: savedPosition.current?.at,
+    });
+
+  const prevUrlSize = useRef(urlSize);
   useEffect(() => {
+    if (prevUrlSize.current === urlSize) return;
+    prevUrlSize.current = urlSize;
+    sessionStorage.removeItem("quotes-position");
     resetPagination(urlSize);
   }, [urlSize]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleOpenQuote = useCallback((quoteId: string) => {
+    sessionStorage.setItem("quotes-position", JSON.stringify({
+      page: paginationProps.page,
+      at: quotes[0]?.id ?? null,
+    }));
+    navigate(quoteId);
+  }, [paginationProps.page, quotes, navigate]);
 
   const handleRowsPerPageChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -54,28 +85,33 @@ export default function Quotes() {
     paginationProps.onRowsPerPageChange!(e);
   };
 
-  // When search is active, load ALL quotes once so filtering works across
-  // all documents, not just the current paginated page.
   const [allQuotes, setAllQuotes] = useState<Quote[]>([]);
-  const [allLoading, setAllLoading] = useState(false);
+  const [allLoaded, setAllLoaded] = useState(false);
   const searchActive = search.length > 0;
   useEffect(() => {
     if (!searchActive) {
       setAllQuotes([]);
+      setAllLoaded(false);
       return;
     }
-    setAllLoading(true);
-    getQuotes({}).then((all) => {
-      setAllQuotes(all);
-      setAllLoading(false);
+    let cancelled = false;
+    setAllLoaded(false);
+    getQuotesByYear(searchYear).then((yearQuotes) => {
+      if (!cancelled) {
+        setAllQuotes(yearQuotes);
+        setAllLoaded(true);
+      }
     });
-  }, [searchActive]); // eslint-disable-line react-hooks/exhaustive-deps
+    return () => { cancelled = true; };
+  }, [searchActive, searchYear]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const filteredQuotes = useMemo(
     () => searchActive ? getFilteredQuotes(allQuotes, search) : quotes,
     [allQuotes, quotes, search, searchActive]
   );
-  const isLoading = searchActive ? allLoading : loading;
+  const [searchPageItems, searchPaginationProps, setSearchPage] =
+    useClientPagination(filteredQuotes);
+  const isLoading = searchActive ? !allLoaded : loading;
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -90,6 +126,7 @@ export default function Quotes() {
                   label="Buscar"
                   onChange={(e) => {
                     setSearch(e.target.value);
+                    setSearchPage(0);
                   }}
                 />
               </Grid>
@@ -104,6 +141,19 @@ export default function Quotes() {
                 </Button>
               </Grid>
             </Grid>
+            {searchActive && (
+              <Grid container justifyContent="center" alignItems="center" sx={{ py: 0.5 }}>
+                <IconButton size="small" disabled={searchYear >= currentYear} onClick={() => { setSearchYear((y) => y + 1); setSearchPage(0); }}>
+                  <ChevronLeftIcon />
+                </IconButton>
+                <Typography variant="body2" sx={{ mx: 1, minWidth: 40, textAlign: "center" }}>
+                  {searchYear}
+                </Typography>
+                <IconButton size="small" onClick={() => { setSearchYear((y) => y - 1); setSearchPage(0); }}>
+                  <ChevronRightIcon />
+                </IconButton>
+              </Grid>
+            )}
             <TableContainer>
               <Table stickyHeader size="small">
                 <TableHead>
@@ -118,20 +168,32 @@ export default function Quotes() {
                 <TableBody>
                   {isLoading ? (
                     <RowSkeleton count={rowsPerPage} />
+                  ) : searchActive ? (
+                    searchPageItems.map((quote) => (
+                      <QuoteRow key={quote.id} quote={quote} onOpen={handleOpenQuote} />
+                    ))
                   ) : (
-                    filteredQuotes.map((quote) => (
-                      <QuoteRow key={quote.id} quote={quote} />
+                    quotes.map((quote) => (
+                      <QuoteRow key={quote.id} quote={quote} onOpen={handleOpenQuote} />
                     ))
                   )}
                 </TableBody>
               </Table>
             </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
-              component="div"
-              {...paginationProps}
-              onRowsPerPageChange={handleRowsPerPageChange}
-            />
+            {searchActive ? (
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                {...searchPaginationProps}
+              />
+            ) : (
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                {...paginationProps}
+                onRowsPerPageChange={handleRowsPerPageChange}
+              />
+            )}
           </Grid>
         </Paper>
       </Grid>
@@ -141,10 +203,10 @@ export default function Quotes() {
 
 type QuoteRowProps = {
   quote: Quote;
+  onOpen: (id: string) => void;
 };
 
-function QuoteRow({ quote }: QuoteRowProps) {
-  const navigate = useNavigate();
+function QuoteRow({ quote, onOpen }: QuoteRowProps) {
   return (
     <TableRow>
       <TableCell>{quote.id}</TableCell>
@@ -155,7 +217,7 @@ function QuoteRow({ quote }: QuoteRowProps) {
       </TableCell>
       <TableCell align="center">
         <Grid container wrap="nowrap">
-          <IconButton onClick={() => navigate(quote.id)}>
+          <IconButton onClick={() => onOpen(quote.id)}>
             <VisibilityIcon />
           </IconButton>
           <QuoteDownloadButton quote={quote} />
