@@ -80,9 +80,11 @@ export function getFilteredQuotes(quotes: Quote[], filter: string | null): Quote
     return quotes;
   }
   const lower = filter.toLowerCase();
-  return quotes.filter(
-    (quote) =>
+  return quotes.filter((quote) => {
+    const concept = (quote.concept ?? getMainProductName(quote)).toLowerCase();
+    return (
       quote.client.name.toLowerCase().includes(lower) ||
-      quote.concept?.toLowerCase().includes(lower)
-  );
+      concept.includes(lower)
+    );
+  });
 }
