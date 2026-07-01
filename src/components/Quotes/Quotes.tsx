@@ -20,7 +20,7 @@ import Title from "components/Common/Title";
 import AddIcon from "@mui/icons-material/Add";
 import getQuotes from "database/quotes/getQuotes";
 import getQuotesByYear from "database/quotes/getQuotesByYear";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { formatClp } from "utils/formatCurrency";
 import {
@@ -41,6 +41,7 @@ export default function Quotes() {
   const currentYear = new Date().getFullYear();
   const [searchYear, setSearchYear] = useState(currentYear);
   const navigate = useNavigate();
+  const location = useLocation();
   const handleNew = () => navigate("nueva");
   const [searchParams, setSearchParams] = useSearchParams();
   const urlSize = Number(searchParams.get("size")) || 10;
@@ -66,6 +67,13 @@ export default function Quotes() {
     sessionStorage.removeItem("quotes-position");
     resetPagination(urlSize);
   }, [urlSize]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const drawerNav = (location.state as any)?.drawerNav;
+  useEffect(() => {
+    if (!drawerNav) return;
+    sessionStorage.removeItem("quotes-position");
+    resetPagination(urlSize);
+  }, [drawerNav]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleOpenQuote = useCallback((quoteId: string) => {
     sessionStorage.setItem("quotes-position", JSON.stringify({

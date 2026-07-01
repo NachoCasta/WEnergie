@@ -43,7 +43,7 @@ export default function Layout() {
   const drawerItems = items.map(({ text, icon, path }) => ({
     text,
     icon,
-    onClick: () => navigate(path),
+    onClick: () => navigate(path, { state: { drawerNav: Date.now() } }),
     current: location.pathname.startsWith(path),
   }));
   const session = useSession();
