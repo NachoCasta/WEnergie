@@ -41,7 +41,7 @@ firestore.indexes.json  # Firestore indexes
 ## Firebase
 
 - Config is hardcoded in `src/database/index.js` (no env vars)
-- Firestore rules allow read/write only for 4 whitelisted email addresses (see `firestore.rules`)
+- Firestore rules allow read/write only for 5 whitelisted email addresses (see `firestore.rules`)
 - Auth uses Google OAuth popup flow via `signInWithPopup`
 
 ## Data Model (Firestore)

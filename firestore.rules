@@ -7,7 +7,8 @@ service cloud.firestore {
         'sonia.worner@wenergie.cl',
         'mi.madrid@wenergie.cl',
         'admin@wenergie.cl',
-        'icastanedaw@gmail.com'
+        'icastanedaw@gmail.com',
+        'mi.madrid899@gmail.com'
         ];
     }
   }
